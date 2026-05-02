@@ -1,4 +1,4 @@
-import type { Portfolio } from '#/features/terminal-portfolio/types'
+import type { Portfolio } from '#/types'
 
 // Shared portfolio data — placeholder content; will be replaced later.
 export const portfolio = {

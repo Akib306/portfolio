@@ -15,10 +15,32 @@ export const Route = createRootRoute({
 				content: 'width=device-width, initial-scale=1',
 			},
 			{
-				title: 'TanStack Start Starter',
+				title: 'Akib Portfolio | Terminal',
+			},
+			{
+				name: 'description',
+				content:
+					"Interactive terminal portfolio showcasing Akib's projects, case studies, and contact information.",
+			},
+			{
+				name: 'theme-color',
+				content: '#1a1d23',
 			},
 		],
 		links: [
+			{
+				rel: 'preconnect',
+				href: 'https://fonts.googleapis.com',
+			},
+			{
+				rel: 'preconnect',
+				href: 'https://fonts.gstatic.com',
+				crossOrigin: 'anonymous',
+			},
+			{
+				rel: 'stylesheet',
+				href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap',
+			},
 			{
 				rel: 'stylesheet',
 				href: appCss,

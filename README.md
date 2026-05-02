@@ -54,7 +54,7 @@ Note: Vite 8 expects Node `20.19+` or `22.12+`. The build may still complete on 
 
 `src/routes/index.tsx` is the homepage route. It is intentionally small and only renders `TerminalPortfolio`.
 
-`src/routes/__root.tsx` is the document shell. It owns metadata, viewport settings, the JetBrains Mono font link, the global stylesheet link, TanStack devtools, and the final `<Scripts />` injection.
+`src/routes/__root.tsx` is the document shell. It owns metadata, viewport settings, the JetBrains Mono font link, the global stylesheet link, and the final `<Scripts />` injection.
 
 `src/TerminalPortfolio.tsx` is the main interactive terminal. It manages boot timing, command input, scroll behavior, selected project state, open project state, and keyboard shortcuts.
 

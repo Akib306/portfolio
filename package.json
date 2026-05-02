@@ -38,6 +38,7 @@
 		"@types/react-dom": "^19.2.0",
 		"@vitejs/plugin-react": "^6.0.1",
 		"eslint": "^9.20.0",
+		"happy-dom": "^20.9.0",
 		"jsdom": "^28.1.0",
 		"prettier": "^3.8.1",
 		"typescript": "^6.0.2",

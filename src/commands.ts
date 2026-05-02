@@ -57,7 +57,7 @@ export function runPortfolioCommand(
 					blockId,
 					0,
 					'output',
-					'commands · whoami · ls · projects · cat <project-id> · contact · clear',
+					'commands · whoami · ls · projects · cat <project-id> · cat location.txt · cat focus.txt · cat contact.txt · clear',
 				),
 				commandLine(
 					blockId,
@@ -91,22 +91,6 @@ export function runPortfolioCommand(
 		return {
 			lines: [
 				commandLine(blockId, 0, 'output', `${portfolio.role}. ${portfolio.blurb}`),
-				commandLine(
-					blockId,
-					1,
-					'output',
-					`loc · ${portfolio.location}  ·  focus · ${portfolio.focus}`,
-				),
-				spacerLine(blockId),
-			],
-		}
-	}
-
-	if (normalized === 'contact') {
-		return {
-			lines: [
-				commandLine(blockId, 0, 'output', `mail · ${portfolio.contact}`),
-				commandLine(blockId, 1, 'output', `site · ${portfolio.domain}`),
 				spacerLine(blockId),
 			],
 		}
@@ -115,7 +99,12 @@ export function runPortfolioCommand(
 	if (normalized === 'cat') {
 		return {
 			lines: [
-				commandLine(blockId, 0, 'error', 'usage · cat <project-id>'),
+				commandLine(
+					blockId,
+					0,
+					'error',
+					'usage · cat <project-id> | location.txt | focus.txt | contact.txt',
+				),
 				spacerLine(blockId),
 			],
 		}
@@ -123,6 +112,36 @@ export function runPortfolioCommand(
 
 	if (normalized.startsWith('cat ')) {
 		const requestedId = trimmed.slice(4).trim()
+		const normalizedFile = requestedId.toLowerCase()
+
+		if (normalizedFile === 'location.txt') {
+			return {
+				lines: [
+					commandLine(blockId, 0, 'output', `${portfolio.location}`),
+					spacerLine(blockId),
+				],
+			}
+		}
+
+		if (normalizedFile === 'focus.txt') {
+			return {
+				lines: [
+					commandLine(blockId, 0, 'output', `${portfolio.focus}`),
+					spacerLine(blockId),
+				],
+			}
+		}
+
+		if (normalizedFile === 'contact.txt') {
+			return {
+				lines: [
+					commandLine(blockId, 0, 'output', `mail · ${portfolio.contact}`),
+					commandLine(blockId, 1, 'output', `site · ${portfolio.domain}`),
+					spacerLine(blockId),
+				],
+			}
+		}
+
 		const project = getProjectById(portfolio, requestedId)
 
 		if (!project) {

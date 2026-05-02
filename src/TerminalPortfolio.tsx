@@ -9,7 +9,9 @@ import { runPortfolioCommand } from './commands'
 const COMMAND_CHIPS = [
 	{ label: 'ls', command: 'ls' },
 	{ label: 'whoami', command: 'whoami' },
-	{ label: 'contact', command: 'contact' },
+	{ label: 'location', command: 'cat location.txt' },
+	{ label: 'focus', command: 'cat focus.txt' },
+	{ label: 'contact', command: 'cat contact.txt' },
 	{ label: 'help', command: 'help' },
 	{ label: 'clear', command: 'clear' },
 ] as const
@@ -342,13 +344,31 @@ function createBootLines(blockId: string): ReadonlyArray<TerminalLineModel> {
 		{
 			id: `${blockId}:output:role`,
 			kind: 'output',
-			text: `${portfolio.role}. ${portfolio.blurb}`,
+			text: `${portfolio.blurb}`,
+			blockId,
+		},
+		{
+			id: `${blockId}:prompt:location`,
+			kind: 'prompt',
+			command: 'cat location.txt',
 			blockId,
 		},
 		{
 			id: `${blockId}:output:location`,
 			kind: 'output',
-			text: `loc · ${portfolio.location}  ·  focus · ${portfolio.focus}`,
+			text: `${portfolio.location}`,
+			blockId,
+		},
+		{
+			id: `${blockId}:prompt:focus`,
+			kind: 'prompt',
+			command: 'cat focus.txt',
+			blockId,
+		},
+		{
+			id: `${blockId}:output:focus`,
+			kind: 'output',
+			text: `${portfolio.focus}`,
 			blockId,
 		},
 		{ id: `${blockId}:spacer:1`, kind: 'spacer', blockId },

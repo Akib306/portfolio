@@ -241,7 +241,7 @@ export function TerminalPortfolio() {
 
 	return (
 		<main
-			className="terminal-frame relative flex h-dvh min-h-[640px] cursor-text flex-col overflow-hidden bg-terminal-bg font-mono text-[13px] leading-relaxed text-terminal-text"
+			className="terminal-frame relative flex h-dvh min-h-[640px] cursor-text flex-col overflow-hidden bg-terminal-bg font-mono text-sm leading-relaxed text-terminal-text"
 			onClick={() => inputRef.current?.focus()}
 		>
 			<div className="terminal-crt-scan" />
@@ -302,7 +302,7 @@ export function TerminalPortfolio() {
 									runCommand(chip.command)
 									setInput('')
 								}}
-								className="cursor-pointer rounded-[2px] border border-terminal-border bg-terminal-panel px-3 py-1 text-xs font-[inherit] text-terminal-text transition-colors hover:border-terminal-blue/60 hover:text-terminal-text-bright"
+								className="cursor-pointer rounded-[2px] border border-terminal-border bg-terminal-panel px-3 py-1 text-[13px] font-[inherit] text-terminal-text transition-colors hover:border-terminal-blue/60 hover:text-terminal-text-bright"
 							>
 								{chip.label}
 							</button>

@@ -27,12 +27,11 @@ export function ProjectList({
 
 	return (
 		<div className="mt-1 flex flex-col gap-px">
-			<div className="hidden border-b border-terminal-border px-2 py-1 text-[10px] tracking-[0.12em] text-terminal-muted sm:grid sm:grid-cols-[18px_180px_70px_90px_minmax(0,1fr)_auto] sm:gap-3">
+			<div className="hidden border-b border-terminal-border px-2 py-1 text-[10px] tracking-[0.12em] text-terminal-muted sm:grid sm:grid-cols-[18px_180px_70px_90px_auto] sm:gap-3">
 				<span />
 				<span>NAME</span>
 				<span>SIZE</span>
 				<span>MODIFIED</span>
-				<span>DESCRIPTION</span>
 				<span />
 			</div>
 
@@ -48,7 +47,7 @@ export function ProjectList({
 							aria-controls={`${blockId}-${project.id}-case`}
 							onClick={() => onToggleProject(blockId, project.id)}
 							className={[
-								'terminal-project-row grid w-full cursor-pointer grid-cols-[18px_minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-0 border-l-2 px-2 py-2 text-left font-[inherit] text-[inherit] text-terminal-text transition-colors sm:grid-cols-[18px_180px_70px_90px_minmax(0,1fr)_auto] sm:items-center',
+								'terminal-project-row grid w-full cursor-pointer grid-cols-[18px_minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-0 border-l-2 px-2 py-2 text-left font-[inherit] text-[inherit] text-terminal-text transition-colors sm:grid-cols-[18px_180px_70px_90px_auto] sm:items-center',
 								open
 									? 'border-l-terminal-blue bg-terminal-blue/10'
 									: 'border-l-transparent',
@@ -72,9 +71,6 @@ export function ProjectList({
 								{project.size}
 							</span>
 							<span className="text-terminal-muted">{project.date}</span>
-							<span className="col-span-2 truncate sm:col-span-1">
-								{project.desc}
-							</span>
 						</button>
 						{open ? (
 							<div id={`${blockId}-${project.id}-case`}>

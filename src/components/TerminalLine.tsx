@@ -30,7 +30,7 @@ export function TerminalLine({
 			return (
 				<div className="flex gap-1.5">
 					<span className="text-terminal-green">$</span>
-					<span className="text-terminal-text">{line.command}</span>
+					<CommandText command={line.command} />
 				</div>
 			)
 		case 'output':
@@ -49,4 +49,21 @@ export function TerminalLine({
 				/>
 			)
 	}
+}
+
+function CommandText({ command }: { command: string }) {
+	const match = command.match(/^(\S+)(.*)$/)
+
+	if (!match) {
+		return null
+	}
+
+	const [, executable, args] = match
+
+	return (
+		<span className="text-terminal-text">
+			<span className="text-terminal-blue">{executable}</span>
+			{args}
+		</span>
+	)
 }

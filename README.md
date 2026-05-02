@@ -86,6 +86,12 @@ TanStack Router uses file-based routing from `src/routes/`.
 
 `src/router.tsx` creates the router instance, enables scroll restoration, and registers router types for TanStack Router.
 
+## Vercel Deployment
+
+This app uses TanStack Start with Nitro for server-aware Vercel output. `vite.config.ts` includes `nitro()` after `tanstackStart()`, which lets Vercel build the app into `.vercel/output` instead of treating it like a plain static Vite site.
+
+Without Nitro, Vercel can deploy the build but return `404 NOT_FOUND` at `/` because the SSR route handler is missing.
+
 ## Tests
 
 `src/TerminalPortfolio.test.tsx` covers the main terminal behavior:

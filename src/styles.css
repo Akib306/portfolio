@@ -1,5 +1,21 @@
 @import 'tailwindcss';
 
+@theme {
+	--color-terminal-bg: #1a1d23;
+	--color-terminal-panel: #21252b;
+	--color-terminal-border: #2a2f37;
+	--color-terminal-border-strong: #181a1f;
+	--color-terminal-text: #abb2bf;
+	--color-terminal-text-soft: #c5cad3;
+	--color-terminal-text-bright: #dcdfe4;
+	--color-terminal-muted: #5c6370;
+	--color-terminal-red: #e06c75;
+	--color-terminal-yellow: #e5c07b;
+	--color-terminal-green: #98c379;
+	--color-terminal-blue: #61afef;
+	--color-terminal-purple: #c678dd;
+}
+
 * {
 	box-sizing: border-box;
 }
@@ -12,7 +28,7 @@ body,
 
 body {
 	margin: 0;
-	background: #1a1d23;
+	background: var(--color-terminal-bg);
 }
 
 .terminal-frame {
@@ -47,7 +63,7 @@ body {
 }
 
 .terminal-scroll {
-	scrollbar-color: #2a2f37 #1a1d23;
+	scrollbar-color: var(--color-terminal-border) var(--color-terminal-bg);
 	scrollbar-width: thin;
 }
 
@@ -56,12 +72,12 @@ body {
 }
 
 .terminal-scroll::-webkit-scrollbar-track {
-	background: #1a1d23;
+	background: var(--color-terminal-bg);
 }
 
 .terminal-scroll::-webkit-scrollbar-thumb {
-	background: #2a2f37;
-	border: 2px solid #1a1d23;
+	background: var(--color-terminal-border);
+	border: 2px solid var(--color-terminal-bg);
 }
 
 .terminal-caret {
@@ -70,20 +86,25 @@ body {
 
 .terminal-case {
 	animation: terminal-expand 0.22s ease;
+	background: rgba(255, 255, 255, 0.015);
 }
 
 .terminal-case-placeholder {
 	background: repeating-linear-gradient(
 		45deg,
-		#1a1d23,
-		#1a1d23 6px,
-		#21252b 6px,
-		#21252b 12px
+		var(--color-terminal-bg),
+		var(--color-terminal-bg) 6px,
+		var(--color-terminal-panel) 6px,
+		var(--color-terminal-panel) 12px
 	);
 }
 
 .terminal-project-row:hover {
 	background: rgba(255, 255, 255, 0.04);
+}
+
+.terminal-project-row-selected {
+	background: rgba(255, 255, 255, 0.03);
 }
 
 @keyframes terminal-blink {

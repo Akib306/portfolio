@@ -25,18 +25,18 @@ export function TerminalLine({
 		case 'spacer':
 			return <div className="h-2" />
 		case 'system':
-			return <div className="text-[#5c6370]">{line.text}</div>
+			return <div className="text-terminal-muted">{line.text}</div>
 		case 'prompt':
 			return (
 				<div className="flex gap-1.5">
-					<span className="text-[#98c379]">$</span>
-					<span className="text-[#abb2bf]">{line.command}</span>
+					<span className="text-terminal-green">$</span>
+					<span className="text-terminal-text">{line.command}</span>
 				</div>
 			)
 		case 'output':
-			return <div className="text-[#abb2bf]">{line.text}</div>
+			return <div className="text-terminal-text">{line.text}</div>
 		case 'error':
-			return <div className="text-[#e06c75]">{line.text}</div>
+			return <div className="text-terminal-red">{line.text}</div>
 		case 'list':
 			return (
 				<ProjectList

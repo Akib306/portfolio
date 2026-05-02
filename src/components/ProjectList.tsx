@@ -27,7 +27,7 @@ export function ProjectList({
 
 	return (
 		<div className="mt-1 flex flex-col gap-px">
-			<div className="hidden border-b border-[#2a2f37] px-2 py-1 text-[10px] tracking-[0.12em] text-[#5c6370] sm:grid sm:grid-cols-[18px_180px_70px_90px_minmax(0,1fr)_auto] sm:gap-3">
+			<div className="hidden border-b border-terminal-border px-2 py-1 text-[10px] tracking-[0.12em] text-terminal-muted sm:grid sm:grid-cols-[18px_180px_70px_90px_minmax(0,1fr)_auto] sm:gap-3">
 				<span />
 				<span>NAME</span>
 				<span>SIZE</span>
@@ -48,30 +48,30 @@ export function ProjectList({
 							aria-controls={`${blockId}-${project.id}-case`}
 							onClick={() => onToggleProject(blockId, project.id)}
 							className={[
-								'terminal-project-row grid w-full cursor-pointer grid-cols-[18px_minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-0 border-l-2 px-2 py-2 text-left font-[inherit] text-[inherit] text-[#abb2bf] transition-colors sm:grid-cols-[18px_180px_70px_90px_minmax(0,1fr)_auto] sm:items-center',
+								'terminal-project-row grid w-full cursor-pointer grid-cols-[18px_minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-0 border-l-2 px-2 py-2 text-left font-[inherit] text-[inherit] text-terminal-text transition-colors sm:grid-cols-[18px_180px_70px_90px_minmax(0,1fr)_auto] sm:items-center',
 								open
-									? 'border-l-[#61afef] bg-[#61afef]/10'
+									? 'border-l-terminal-blue bg-terminal-blue/10'
 									: 'border-l-transparent',
-								!open && selected ? 'bg-white/[0.03]' : '',
+								!open && selected ? 'terminal-project-row-selected' : '',
 							].join(' ')}
 						>
 							<span
 								aria-hidden="true"
 								className={[
-									'text-center font-bold text-[#61afef] transition-transform',
+									'text-center font-bold text-terminal-blue transition-transform',
 									open ? 'rotate-90' : 'rotate-0',
 								].join(' ')}
 							>
 								›
 							</span>
-							<span className="truncate text-[#e5c07b]">{project.id}</span>
-							<span className="justify-self-end text-[11px] text-[#5c6370] sm:justify-self-auto">
+							<span className="truncate text-terminal-yellow">{project.id}</span>
+							<span className="justify-self-end text-[11px] text-terminal-muted sm:justify-self-auto">
 								{open ? '[ close ]' : '[ open ]'}
 							</span>
-							<span className="col-start-2 text-[#5c6370] sm:col-start-auto">
+							<span className="col-start-2 text-terminal-muted sm:col-start-auto">
 								{project.size}
 							</span>
-							<span className="text-[#5c6370]">{project.date}</span>
+							<span className="text-terminal-muted">{project.date}</span>
 							<span className="col-span-2 truncate sm:col-span-1">
 								{project.desc}
 							</span>

@@ -196,16 +196,16 @@ export function TerminalPortfolio() {
 
 	return (
 		<main
-			className="terminal-frame relative flex h-dvh min-h-[640px] cursor-text flex-col overflow-hidden bg-[#1a1d23] font-mono text-[13px] leading-relaxed text-[#abb2bf]"
+			className="terminal-frame relative flex h-dvh min-h-[640px] cursor-text flex-col overflow-hidden bg-terminal-bg font-mono text-[13px] leading-relaxed text-terminal-text"
 			onClick={() => inputRef.current?.focus()}
 		>
 			<div className="terminal-crt-scan" />
 			<div className="terminal-crt-vignette" />
 
-			<div className="relative z-[3] flex items-center gap-2 border-b border-[#181a1f] bg-[#21252b] px-3.5 py-2.5 text-[11px] text-[#5c6370]">
-				<span className="h-[11px] w-[11px] rounded-full bg-[#e06c75]" />
-				<span className="h-[11px] w-[11px] rounded-full bg-[#e5c07b]" />
-				<span className="h-[11px] w-[11px] rounded-full bg-[#98c379]" />
+			<div className="relative z-[3] flex items-center gap-2 border-b border-terminal-border-strong bg-terminal-panel px-3.5 py-2.5 text-[11px] text-terminal-muted">
+				<span className="h-[11px] w-[11px] rounded-full bg-terminal-red" />
+				<span className="h-[11px] w-[11px] rounded-full bg-terminal-yellow" />
+				<span className="h-[11px] w-[11px] rounded-full bg-terminal-green" />
 				<span>{portfolio.handle} — tty0</span>
 				<span className="flex-1" />
 				<span>200 OK</span>
@@ -222,12 +222,12 @@ export function TerminalPortfolio() {
 						<label htmlFor="terminal-command" className="sr-only">
 							Terminal command
 						</label>
-						<span className="text-[#98c379]">guest</span>
-						<span className="text-[#5c6370]">@</span>
-						<span className="text-[#61afef]">{portfolio.domain}</span>
-						<span className="text-[#5c6370]">:</span>
-						<span className="text-[#c678dd]">~</span>
-						<span className="text-[#abb2bf]">$</span>
+						<span className="text-terminal-green">guest</span>
+						<span className="text-terminal-muted">@</span>
+						<span className="text-terminal-blue">{portfolio.domain}</span>
+						<span className="text-terminal-muted">:</span>
+						<span className="text-terminal-purple">~</span>
+						<span className="text-terminal-text">$</span>
 						<input
 							id="terminal-command"
 							ref={inputRef}
@@ -235,12 +235,12 @@ export function TerminalPortfolio() {
 							value={input}
 							onChange={(event) => setInput(event.target.value)}
 							onKeyDown={handleKeyDown}
-							className="min-w-0 flex-1 border-0 bg-transparent font-[inherit] text-[inherit] text-[#abb2bf] outline-none placeholder:text-[#5c6370]"
+							className="min-w-0 flex-1 border-0 bg-transparent font-[inherit] text-[inherit] text-terminal-text outline-none placeholder:text-terminal-muted"
 							placeholder="type a command"
 							autoComplete="off"
 							spellCheck={false}
 						/>
-						<span aria-hidden="true" className="terminal-caret text-[#61afef]">
+						<span aria-hidden="true" className="terminal-caret text-terminal-blue">
 							▍
 						</span>
 					</div>
@@ -256,7 +256,7 @@ export function TerminalPortfolio() {
 									event.stopPropagation()
 									runCommand(chip.command)
 								}}
-								className="cursor-pointer rounded-[2px] border border-[#2a2f37] bg-[#21252b] px-3 py-1 text-xs font-[inherit] text-[#abb2bf] transition-colors hover:border-[#61afef]/60 hover:text-[#dcdfe4]"
+								className="cursor-pointer rounded-[2px] border border-terminal-border bg-terminal-panel px-3 py-1 text-xs font-[inherit] text-terminal-text transition-colors hover:border-terminal-blue/60 hover:text-terminal-text-bright"
 							>
 								{chip.label}
 							</button>
@@ -265,7 +265,7 @@ export function TerminalPortfolio() {
 				) : null}
 			</div>
 
-			<div className="relative z-[3] flex gap-3 border-t border-[#2a2f37] px-4 py-2 text-[11px] text-[#5c6370]">
+			<div className="relative z-[3] flex gap-3 border-t border-terminal-border px-4 py-2 text-[11px] text-terminal-muted">
 				<span>↑↓ select · tab toggle · enter run</span>
 				<span className="flex-1" />
 				<span>{portfolio.domain}</span>

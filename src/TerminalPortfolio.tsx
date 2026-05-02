@@ -30,7 +30,9 @@ export function TerminalPortfolio() {
 	const scrollRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const blockCounterRef = useRef(0)
+	const bootRunRef = useRef(0)
 	const bootTimersRef = useRef<Array<ReturnType<typeof setTimeout>>>([])
+	const scrollFrameRef = useRef<number | null>(null)
 
 	const makeBlockId = useCallback((prefix: string) => {
 		blockCounterRef.current += 1
@@ -45,10 +47,13 @@ export function TerminalPortfolio() {
 	const startBoot = useCallback(() => {
 		clearBootTimers()
 
+		const bootRunId = bootRunRef.current + 1
+		bootRunRef.current = bootRunId
 		const bootBlockId = makeBlockId('boot')
 		const bootLines = createBootLines(bootBlockId)
 
 		setLines([])
+		setInput('')
 		setOpenProjects({})
 		setBooted(false)
 		setCursorIndex(0)
@@ -56,6 +61,10 @@ export function TerminalPortfolio() {
 		setActiveProjectIds(portfolio.projects.map((project) => project.id))
 
 		const tick = (index: number) => {
+			if (bootRunRef.current !== bootRunId) {
+				return
+			}
+
 			if (index >= bootLines.length) {
 				setBooted(true)
 				return
@@ -76,16 +85,39 @@ export function TerminalPortfolio() {
 
 	useEffect(() => {
 		startBoot()
-		return clearBootTimers
+		return () => {
+			bootRunRef.current += 1
+			clearBootTimers()
+		}
 	}, [clearBootTimers, startBoot])
 
 	useEffect(() => {
-		if (!scrollRef.current) {
-			return
+		if (scrollFrameRef.current !== null) {
+			cancelAnimationFrame(scrollFrameRef.current)
 		}
 
-		scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-	}, [lines, openProjects])
+		scrollFrameRef.current = requestAnimationFrame(() => {
+			if (!scrollRef.current) {
+				return
+			}
+
+			scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+			scrollFrameRef.current = null
+		})
+
+		return () => {
+			if (scrollFrameRef.current !== null) {
+				cancelAnimationFrame(scrollFrameRef.current)
+				scrollFrameRef.current = null
+			}
+		}
+	}, [booted, lines, openProjects])
+
+	useEffect(() => {
+		if (booted) {
+			inputRef.current?.focus()
+		}
+	}, [booted])
 
 	const cursorProjectId = activeProjectIds[cursorIndex]
 
@@ -107,6 +139,10 @@ export function TerminalPortfolio() {
 
 	const runCommand = useCallback(
 		(command: string) => {
+			if (!booted) {
+				return
+			}
+
 			const blockId = makeBlockId('cmd')
 			const promptLine: TerminalLineModel = {
 				id: `${blockId}:prompt`,
@@ -125,19 +161,20 @@ export function TerminalPortfolio() {
 
 			const listLine = result.lines.find((line) => line.kind === 'list')
 			if (listLine?.kind === 'list') {
-				setActiveListBlockId(blockId)
+				setActiveListBlockId(listLine.blockId ?? blockId)
 				setActiveProjectIds(listLine.projectIds)
 				setCursorIndex(0)
 			}
 
 			if (result.openProjectId) {
+				const openProjectId = result.openProjectId
 				setOpenProjects((current) => ({
 					...current,
-					[getOpenProjectKey(blockId, result.openProjectId!)]: true,
+					[getOpenProjectKey(blockId, openProjectId)]: true,
 				}))
 			}
 		},
-		[makeBlockId, startBoot],
+		[booted, makeBlockId, startBoot],
 	)
 
 	const handleKeyDown = useCallback(
@@ -150,19 +187,25 @@ export function TerminalPortfolio() {
 
 			if (event.key === 'ArrowUp') {
 				event.preventDefault()
+				if (activeProjectIds.length === 0) {
+					return
+				}
 				setCursorIndex((current) => Math.max(0, current - 1))
 				return
 			}
 
 			if (event.key === 'ArrowDown') {
 				event.preventDefault()
+				if (activeProjectIds.length === 0) {
+					return
+				}
 				setCursorIndex((current) =>
 					Math.min(activeProjectIds.length - 1, current + 1),
 				)
 				return
 			}
 
-			if (event.key === 'Tab' && cursorProjectId) {
+			if (event.key === 'Tab' && activeListBlockId && cursorProjectId) {
 				event.preventDefault()
 				toggleProject(activeListBlockId, cursorProjectId)
 			}
@@ -255,6 +298,7 @@ export function TerminalPortfolio() {
 								onClick={(event) => {
 									event.stopPropagation()
 									runCommand(chip.command)
+									setInput('')
 								}}
 								className="cursor-pointer rounded-[2px] border border-terminal-border bg-terminal-panel px-3 py-1 text-xs font-[inherit] text-terminal-text transition-colors hover:border-terminal-blue/60 hover:text-terminal-text-bright"
 							>

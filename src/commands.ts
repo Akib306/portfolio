@@ -70,7 +70,12 @@ export function runPortfolioCommand(
 		}
 	}
 
-	if (normalized === 'ls' || normalized === 'ls -la' || normalized === 'projects') {
+	if (
+		normalized === 'ls' ||
+		normalized === 'ls -la' ||
+		normalized === 'ls /projects' ||
+		normalized === 'projects'
+	) {
 		return {
 			lines: [
 				projectListLine(
@@ -102,6 +107,15 @@ export function runPortfolioCommand(
 			lines: [
 				commandLine(blockId, 0, 'output', `mail · ${portfolio.contact}`),
 				commandLine(blockId, 1, 'output', `site · ${portfolio.domain}`),
+				spacerLine(blockId),
+			],
+		}
+	}
+
+	if (normalized === 'cat') {
+		return {
+			lines: [
+				commandLine(blockId, 0, 'error', 'usage · cat <project-id>'),
 				spacerLine(blockId),
 			],
 		}

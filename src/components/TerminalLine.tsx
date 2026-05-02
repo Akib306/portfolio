@@ -25,18 +25,28 @@ export function TerminalLine({
 		case 'spacer':
 			return <div className="h-2" />
 		case 'system':
-			return <div className="text-terminal-muted">{line.text}</div>
+			return (
+				<div className="break-words text-terminal-muted">
+					{line.text}
+				</div>
+			)
 		case 'prompt':
 			return (
-				<div className="flex gap-1.5">
+				<div className="flex min-w-0 gap-1.5">
 					<span className="text-terminal-green">$</span>
 					<CommandText command={line.command} />
 				</div>
 			)
 		case 'output':
-			return <div className="text-terminal-text">{line.text}</div>
+			return (
+				<div className="break-words text-terminal-text">
+					{line.text}
+				</div>
+			)
 		case 'error':
-			return <div className="text-terminal-red">{line.text}</div>
+			return (
+				<div className="break-words text-terminal-red">{line.text}</div>
+			)
 		case 'list':
 			return (
 				<ProjectList
@@ -61,7 +71,7 @@ function CommandText({ command }: { command: string }) {
 	const [, executable, args] = match
 
 	return (
-		<span className="text-terminal-text">
+		<span className="min-w-0 break-words text-terminal-text">
 			<span className="text-terminal-blue">{executable}</span>
 			{args}
 		</span>

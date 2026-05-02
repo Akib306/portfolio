@@ -6,10 +6,10 @@ type CaseStudyInLineProps = {
 
 export function CaseStudyInLine({ project }: CaseStudyInLineProps) {
 	return (
-		<div className="terminal-case ml-0 mt-1 mb-2 border border-terminal-border border-l-2 border-l-terminal-blue px-4 py-3 sm:ml-7 sm:px-[18px]">
-			<div className="font-serif text-[22px] leading-tight font-medium tracking-[-0.2px] text-terminal-text-bright">
+		<div className="terminal-case ml-0 mt-1 mb-2 break-words border border-terminal-border border-l-2 border-l-terminal-blue px-4 py-3 sm:ml-7 sm:px-[18px]">
+			<h2 className="font-serif text-[20px] leading-tight font-medium tracking-[-0.2px] text-terminal-text-bright sm:text-[22px]">
 				{project.tagline}
-			</div>
+			</h2>
 
 			<div className="mt-3 grid gap-x-3 gap-y-1 border-b border-terminal-border pb-3 text-[11px] text-terminal-text sm:grid-cols-4">
 				<Meta label="role" value={project.role} />

@@ -230,46 +230,74 @@ export function TerminalPortfolio() {
 					line={line}
 					portfolio={portfolio}
 					cursorProjectId={
-						line.blockId === activeListBlockId ? cursorProjectId : undefined
+						line.blockId === activeListBlockId
+							? cursorProjectId
+							: undefined
 					}
 					isProjectOpen={isProjectOpen}
 					onToggleProject={toggleProject}
 				/>
 			)),
-		[activeListBlockId, cursorProjectId, isProjectOpen, lines, toggleProject],
+		[
+			activeListBlockId,
+			cursorProjectId,
+			isProjectOpen,
+			lines,
+			toggleProject,
+		],
 	)
 
 	return (
 		<main
-			className="terminal-frame relative flex h-dvh min-h-[640px] cursor-text flex-col overflow-hidden bg-terminal-bg font-mono text-sm leading-relaxed text-terminal-text"
+			className="terminal-frame relative flex h-svh min-h-[520px] cursor-text flex-col overflow-hidden bg-terminal-bg font-mono text-xs leading-relaxed text-terminal-text sm:h-dvh sm:min-h-[640px] sm:text-sm"
+			aria-label="Interactive terminal portfolio"
 			onClick={() => inputRef.current?.focus()}
 		>
-			<div className="terminal-crt-scan" />
-			<div className="terminal-crt-vignette" />
+			<div className="terminal-crt-scan" aria-hidden="true" />
+			<div className="terminal-crt-vignette" aria-hidden="true" />
 
-			<div className="relative z-[3] flex items-center gap-2 border-b border-terminal-border-strong bg-terminal-panel px-3.5 py-2.5 text-[11px] text-terminal-muted">
-				<span className="h-[11px] w-[11px] rounded-full bg-terminal-red" />
-				<span className="h-[11px] w-[11px] rounded-full bg-terminal-yellow" />
-				<span className="h-[11px] w-[11px] rounded-full bg-terminal-green" />
-				<span>{portfolio.handle} — tty0</span>
+			<div className="relative z-[3] flex flex-wrap items-center gap-2 border-b border-terminal-border-strong bg-terminal-panel px-3.5 py-2.5 text-[11px] text-terminal-muted">
+				<span
+					className="h-[11px] w-[11px] rounded-full bg-terminal-red"
+					aria-hidden="true"
+				/>
+				<span
+					className="h-[11px] w-[11px] rounded-full bg-terminal-yellow"
+					aria-hidden="true"
+				/>
+				<span
+					className="h-[11px] w-[11px] rounded-full bg-terminal-green"
+					aria-hidden="true"
+				/>
+				<span className="min-w-0 truncate">
+					{portfolio.handle} — tty0
+				</span>
 				<span className="flex-1" />
-				<span>200 OK</span>
+				<span role="status" aria-label="Terminal status">
+					200 OK
+				</span>
 			</div>
 
 			<div
 				ref={scrollRef}
-				className="terminal-scroll relative z-[3] flex-1 overflow-auto px-4 py-[18px] sm:px-[22px]"
+				className="terminal-scroll relative z-[3] flex-1 overflow-auto overflow-x-hidden px-3 py-4 sm:px-[22px] sm:py-[18px]"
+				role="region"
+				aria-live="polite"
+				aria-relevant="additions text"
+				aria-label="Terminal output"
 			>
 				{renderedLines}
 
 				{booted ? (
-					<div className="mt-3.5 flex items-center gap-1.5">
+					<div className="mt-3.5 flex flex-wrap items-center gap-1.5">
 						<label htmlFor="terminal-command" className="sr-only">
 							Terminal command
 						</label>
 						<span className="text-terminal-green">guest</span>
 						<span className="text-terminal-muted">@</span>
-						<span className="text-terminal-blue">{portfolio.domain}</span>
+						<span className="text-terminal-blue">
+							{portfolio.domain}
+						</span>
 						<span className="text-terminal-muted">:</span>
 						<span className="text-terminal-purple">~</span>
 						<span className="text-terminal-text">$</span>
@@ -280,23 +308,32 @@ export function TerminalPortfolio() {
 							value={input}
 							onChange={(event) => setInput(event.target.value)}
 							onKeyDown={handleKeyDown}
-							className="min-w-0 flex-1 border-0 bg-transparent font-[inherit] text-[inherit] text-terminal-text outline-none placeholder:text-terminal-muted"
+							className="min-w-[10rem] flex-1 basis-[10rem] border-0 bg-transparent font-[inherit] text-[inherit] text-terminal-text outline-none placeholder:text-terminal-muted focus-visible:outline-2 focus-visible:outline-terminal-blue"
 							placeholder="type a command"
 							autoComplete="off"
 							spellCheck={false}
+							aria-describedby="terminal-keyboard-help"
 						/>
-						<span aria-hidden="true" className="terminal-caret text-terminal-blue">
+						<span
+							aria-hidden="true"
+							className="terminal-caret text-terminal-blue"
+						>
 							▍
 						</span>
 					</div>
 				) : null}
 
 				{booted ? (
-					<div className="mt-3 flex flex-wrap gap-1.5">
+					<div
+						className="mt-3 flex flex-wrap gap-1.5"
+						role="toolbar"
+						aria-label="Command shortcuts"
+					>
 						{COMMAND_CHIPS.map((chip) => (
 							<button
 								key={chip.command}
 								type="button"
+								aria-label={`Run ${chip.command}`}
 								onClick={(event) => {
 									event.stopPropagation()
 									runCommand(chip.command)
@@ -311,7 +348,10 @@ export function TerminalPortfolio() {
 				) : null}
 			</div>
 
-			<div className="relative z-[3] flex gap-3 border-t border-terminal-border px-4 py-2 text-[11px] text-terminal-muted">
+			<div
+				id="terminal-keyboard-help"
+				className="relative z-[3] flex flex-wrap gap-3 border-t border-terminal-border px-3 py-2 text-[11px] text-terminal-muted sm:px-4"
+			>
 				<span>↑↓ select · tab toggle · enter run</span>
 				<span className="flex-1" />
 				<span>{portfolio.domain}</span>

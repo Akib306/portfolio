@@ -32,7 +32,8 @@ body {
 }
 
 .terminal-frame {
-	font-family: 'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas,
+	font-family:
+		'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas,
 		'Liberation Mono', monospace;
 }
 
@@ -103,8 +104,19 @@ body {
 	background: rgba(255, 255, 255, 0.04);
 }
 
+.terminal-project-row {
+	min-width: 0;
+}
+
 .terminal-project-row-selected {
 	background: rgba(255, 255, 255, 0.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.terminal-caret,
+	.terminal-case {
+		animation: none;
+	}
 }
 
 @keyframes terminal-blink {

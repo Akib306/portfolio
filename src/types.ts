@@ -3,6 +3,11 @@ export type ProjectDecision = {
 	detail: string
 }
 
+export type ProjectLink = {
+	label: string
+	href: string
+}
+
 export type Project = {
 	id: string
 	size: string
@@ -16,6 +21,9 @@ export type Project = {
 	problem: string
 	insight: string
 	decisions: ReadonlyArray<ProjectDecision>
+	coverImage?: string
+	coverAlt?: string
+	links?: ReadonlyArray<ProjectLink>
 }
 
 export type PortfolioHighlight = {

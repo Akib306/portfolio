@@ -18,11 +18,27 @@ export function CaseStudyInLine({ project }: CaseStudyInLineProps) {
 				<Meta label="stat" value={project.status} />
 			</div>
 
+			{project.links?.length ? (
+				<div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+					{project.links.map((link) => (
+						<a
+							key={link.href}
+							href={link.href}
+							target="_blank"
+							rel="noreferrer"
+							className="rounded-[2px] border border-terminal-border bg-terminal-panel px-2.5 py-1 text-terminal-blue transition-colors hover:border-terminal-blue/70 hover:text-terminal-text-bright focus-visible:outline-2 focus-visible:outline-terminal-blue"
+						>
+							{link.label} /open
+						</a>
+					))}
+				</div>
+			) : null}
+
 			<CaseSection title="// the problem">{project.problem}</CaseSection>
 			<CaseSection title="// the insight">{project.insight}</CaseSection>
 
 			<div className="mt-4 mb-1 text-[11px] tracking-[0.04em] text-terminal-purple">
-				// design decisions
+				// project highlights
 			</div>
 			{project.decisions.map((decision) => (
 				<p
@@ -34,9 +50,26 @@ export function CaseStudyInLine({ project }: CaseStudyInLineProps) {
 				</p>
 			))}
 
-			<div className="terminal-case-placeholder mt-3 flex h-[110px] items-center justify-center border border-dashed border-terminal-border text-[11px] text-terminal-muted">
-				img · {project.id} hero
-			</div>
+			{project.coverImage ? (
+				<figure className="mt-3 overflow-hidden rounded-[2px] border border-terminal-border bg-terminal-bg">
+					<img
+						src={project.coverImage}
+						alt={
+							project.coverAlt ??
+							`${project.id} project screenshot`
+						}
+						loading="lazy"
+						className="block max-h-[340px] w-full object-contain"
+					/>
+					<figcaption className="border-t border-terminal-border px-3 py-1.5 text-[11px] text-terminal-muted">
+						img · {project.id} cover
+					</figcaption>
+				</figure>
+			) : (
+				<div className="terminal-case-placeholder mt-3 flex h-[110px] items-center justify-center border border-dashed border-terminal-border text-[11px] text-terminal-muted">
+					img · {project.id} hero
+				</div>
+			)}
 		</div>
 	)
 }

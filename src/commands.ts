@@ -1,17 +1,17 @@
-import type { CommandResult, Portfolio, Project, TerminalLine } from '#/types'
+import type {
+	CommandResult,
+	Experience,
+	Portfolio,
+	Project,
+	TerminalLine,
+} from '#/types'
 
 const commandLine = (
 	blockId: string,
 	index: number,
 	kind: 'output' | 'error',
 	text: string,
-): TerminalLine => ({
-	id: `${blockId}:${kind}:${index}`,
-	kind,
-	text,
-	blockId,
-})
-
+): TerminalLine => ({ id: `${blockId}:${kind}:${index}`, kind, text, blockId })
 const projectListLine = (
 	blockId: string,
 	projectIds: ReadonlyArray<Project['id']>,
@@ -21,7 +21,15 @@ const projectListLine = (
 	blockId,
 	projectIds,
 })
-
+const experienceListLine = (
+	blockId: string,
+	experienceIds: ReadonlyArray<Experience['id']>,
+): TerminalLine => ({
+	id: `${blockId}:experience`,
+	kind: 'experience-list',
+	blockId,
+	experienceIds,
+})
 const spacerLine = (blockId: string): TerminalLine => ({
 	id: `${blockId}:spacer`,
 	kind: 'spacer',
@@ -39,43 +47,35 @@ export function runPortfolioCommand(
 	portfolio: Portfolio,
 	blockId: string,
 ): CommandResult {
-	const trimmed = command.trim()
+	const trimmed = command.trim().replace(/\s+/g, ' ')
 	const normalized = trimmed.toLowerCase()
-
-	if (!trimmed) {
-		return { lines: [] }
-	}
-
-	if (normalized === 'clear') {
-		return { lines: [], shouldClear: true }
-	}
-
-	if (normalized === 'help') {
-		return {
-			lines: [
-				commandLine(
-					blockId,
-					0,
-					'output',
-					'commands · whoami · ls · projects · cat <project-id> · cat location.txt · cat focus.txt · cat contact.txt · clear',
-				),
-				commandLine(
-					blockId,
-					1,
-					'output',
-					'tip · click a project row or use tab to toggle its case study',
-				),
-				spacerLine(blockId),
-			],
-		}
-	}
-
-	if (
-		normalized === 'ls' ||
-		normalized === 'ls -la' ||
-		normalized === 'ls /projects' ||
-		normalized === 'projects'
-	) {
+	const output = (...texts: ReadonlyArray<string>): CommandResult => ({
+		lines: [
+			...texts.map((text, index) =>
+				commandLine(blockId, index, 'output', text),
+			),
+			spacerLine(blockId),
+		],
+	})
+	const error = (text: string): CommandResult => ({
+		lines: [commandLine(blockId, 0, 'error', text), spacerLine(blockId)],
+	})
+	if (!trimmed) return { lines: [] }
+	if (normalized === 'clear') return { lines: [], shouldClear: true }
+	if (normalized === 'help')
+		return output(
+			'commands · whoami · ls · ls projects · ls experiences · socials · clear',
+			'files · cat projects/<id> · cat experiences/<id> · cat location.txt · cat socials.txt',
+			'tip · Enter runs a command; Tab moves between controls; open any row to read details',
+			'paths · projects and experiences are directories in ~; use relative paths such as ls projects',
+		)
+	if (normalized === 'ls' || normalized === 'ls -la')
+		return output('projects', 'experiences', 'location.txt', 'socials.txt')
+	const lsMatch = normalized.match(/^ls\s+(?:-la\s+)?(.+)$/)
+	const directory = lsMatch?.[1]
+		.replace(/^(?:\.\/|~\/)/, '')
+		.replace(/\/$/, '')
+	if (directory === 'projects' || normalized === 'projects')
 		return {
 			lines: [
 				projectListLine(
@@ -85,89 +85,76 @@ export function runPortfolioCommand(
 				spacerLine(blockId),
 			],
 		}
-	}
-
-	if (normalized === 'whoami') {
+	if (
+		directory === 'experiences' ||
+		directory === 'experience' ||
+		normalized === 'experiences' ||
+		normalized === 'experience'
+	)
 		return {
 			lines: [
-				commandLine(blockId, 0, 'output', `${portfolio.role}. ${portfolio.blurb}`),
-				spacerLine(blockId),
-			],
-		}
-	}
-
-	if (normalized === 'cat') {
-		return {
-			lines: [
-				commandLine(
+				experienceListLine(
 					blockId,
-					0,
-					'error',
-					'usage · cat <project-id> | location.txt | focus.txt | contact.txt',
+					portfolio.experience.map((experience) => experience.id),
 				),
 				spacerLine(blockId),
 			],
 		}
-	}
-
-	if (normalized.startsWith('cat ')) {
-		const requestedId = trimmed.slice(4).trim()
-		const normalizedFile = requestedId.toLowerCase()
-
-		if (normalizedFile === 'location.txt') {
-			return {
-				lines: [
-					commandLine(blockId, 0, 'output', `${portfolio.location}`),
-					spacerLine(blockId),
-				],
-			}
-		}
-
-		if (normalizedFile === 'focus.txt') {
-			return {
-				lines: [
-					commandLine(blockId, 0, 'output', `${portfolio.focus}`),
-					spacerLine(blockId),
-				],
-			}
-		}
-
-		if (normalizedFile === 'contact.txt') {
-			return {
-				lines: [
-					commandLine(blockId, 0, 'output', `mail · ${portfolio.contact}`),
-					commandLine(blockId, 1, 'output', `site · ${portfolio.domain}`),
-					spacerLine(blockId),
-				],
-			}
-		}
-
-		const project = getProjectById(portfolio, requestedId)
-
-		if (!project) {
-			return {
-				lines: [
-					commandLine(blockId, 0, 'error', 'no such project · try ls'),
-					spacerLine(blockId),
-				],
-			}
-		}
-
+	if (lsMatch)
+		return error(
+			`ls: cannot access '${lsMatch[1]}' · try ls projects or ls experiences`,
+		)
+	if (normalized === 'whoami')
+		return output(`${portfolio.name} · ${portfolio.role}`, portfolio.blurb)
+	if (normalized === 'socials' || normalized === 'contact')
 		return {
-			lines: [projectListLine(blockId, [project.id]), spacerLine(blockId)],
-			openProjectId: project.id,
+			lines: [
+				{
+					id: `${blockId}:socials`,
+					kind: 'socials',
+					blockId,
+					links: portfolio.socials,
+				},
+				spacerLine(blockId),
+			],
 		}
+	if (normalized === 'cat')
+		return error(
+			'usage · cat projects/<id> | experiences/<id> | location.txt | socials.txt',
+		)
+	if (normalized.startsWith('cat ')) {
+		const requested = trimmed.slice(4).replace(/^(?:\.\/|~\/)/, '')
+		const filename = requested.toLowerCase()
+		if (filename === 'location.txt') return output(portfolio.location)
+		if (filename === 'socials.txt' || filename === 'contact.txt')
+			return runPortfolioCommand('socials', portfolio, blockId)
+		const projectId = requested.replace(/^projects\//i, '')
+		const project = getProjectById(portfolio, projectId)
+		if (project)
+			return {
+				lines: [
+					projectListLine(blockId, [project.id]),
+					spacerLine(blockId),
+				],
+				openProjectId: project.id,
+			}
+		const experienceId = requested
+			.replace(/^experiences\//i, '')
+			.toLowerCase()
+		const experience = portfolio.experience.find(
+			(item) => item.id.toLowerCase() === experienceId,
+		)
+		if (experience)
+			return {
+				lines: [
+					experienceListLine(blockId, [experience.id]),
+					spacerLine(blockId),
+				],
+				openExperienceId: experience.id,
+			}
+		return error(
+			`cat: ${requested}: no such file · try ls projects or ls experiences`,
+		)
 	}
-
-	return {
-		lines: [
-			commandLine(
-				blockId,
-				0,
-				'error',
-				`command not found: ${normalized} · try help`,
-			),
-			spacerLine(blockId),
-		],
-	}
+	return error(`command not found: ${normalized} · try help`)
 }

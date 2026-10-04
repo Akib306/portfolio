@@ -1,151 +1,177 @@
 import type { Portfolio } from '#/types'
 
-// Shared portfolio data — placeholder content; will be replaced later.
+// Sources and wording decisions are recorded in PORTFOLIO_AUDIT.md.
 export const portfolio = {
 	name: 'Motasin Akib',
 	handle: 'motasin@portfolio',
 	domain: 'motasin.dev',
-	role: 'Software Engineer',
-	blurb: 'I am a 3rd year Computer Science student at the University of Saskatchewan. I am currently working a 12-month co-op with CanAi SSC as a Software Engineer.',
+	role: 'Software Developer',
+	blurb: 'I am a 3rd year Computer Science student at the University of Saskatchewan. I am interested in full-stack applications, distributed systems, and AI interfaces. My current work includes a co-op with SSC CanAI and computer vision and robotics development at USask.',
 	location: 'Saskatoon, Saskatchewan, Canada',
-	focus: 'Full-stack Web Development · AI Interfaces · Game Development',
-	contact: '306akib@gmail.com',
-	projects: [
+	socials: [
+		{ label: 'GitHub', href: 'https://github.com/Akib306' },
+		{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/akiba8728a/' },
+	],
+	experience: [
 		{
-			id: 'campus-find.app',
-			size: '949kb',
-			date: '2025-11',
-			desc: 'USask lost-and-found platform with verified posts, search, alerts, and messaging',
-			role: 'Team project — full-stack development',
-			status: 'LIVE',
-			tagline: 'A verified lost-and-found workflow for USask students',
-			year: '2025',
-			platform: 'TypeScript · Next.js · PostgreSQL · Docker',
-			problem:
-				'USask students need a trusted place to report missing items, search recent found posts, and coordinate returns without exposing personal contact details.',
-			insight:
-				'CampusFind turns the lost-and-found process into a structured workflow with searchable listings, standardized deployment paths, and team-owned delivery practices.',
-			decisions: [
-				{
-					title: 'Team delivery',
-					detail: 'Led a five-person team using Scrum meetings, code reviews, and issue tracking to keep development moving predictably.',
-				},
-				{
-					title: 'Database discipline',
-					detail: 'Introduced database migrations and standardized local, staging, and production workflows to prevent schema drift.',
-				},
-				{
-					title: 'Fast item search',
-					detail: 'Engineered PostgreSQL full-text search for lost-item discovery with roughly 100 ms search latency.',
-				},
-				{
-					title: 'Deployment automation',
-					detail: 'Automated environment verification and deployments with GitLab CI to reduce manual release effort and deployment risk.',
-				},
-			],
-			coverImage: '/campus-find.png',
-			coverAlt:
-				'CampusFind landing page screenshot showing USask verified search, alerts, reporting, messaging, and community features.',
+			id: 'CANAI_SSC.coop',
+			size: '12mo',
+			date: '2026',
+			desc: 'Software development co-op with SSC CanAI',
+			role: 'Software Engineer co-op',
+			organization: 'Government of Canada · SSC CanAI',
+			status: 'CURRENT',
+			period: 'Sep 2026–present · 12-month co-op',
+			summary:
+				'Software engineering co-op with SSC CanAI in the Government of Canada, based in Saskatoon.',
+			highlights: [],
 			links: [
 				{
-					label: 'GitHub',
-					href: 'https://github.com/Akib306/Campus-Find',
-				},
-				{
-					label: 'Live',
-					href: 'https://campus-find-three.vercel.app/',
+					label: 'LinkedIn profile',
+					href: 'https://www.linkedin.com/in/akiba8728a/',
 				},
 			],
 		},
 		{
-			id: '8ball+.game',
-			size: '449kb',
-			date: '2025-01',
-			desc: '2D 8-ball pool game with player HUD, scoring, cue aiming, and power-up slots',
-			role: 'Team game project — gameplay and UI',
-			status: 'PLAYABLE',
-			tagline: 'An arcade-style 8-ball match with dynamic power-ups',
-			year: '2025',
-			platform: 'Godot · GDScript',
-			problem:
-				'The game needed readable pool mechanics, dynamic power-ups, scoring logic, and stable UI/game-state transitions inside a fast team build.',
-			insight:
-				'The strongest improvements came from tightening core gameplay physics and reducing duplicated state paths across transitions.',
-			decisions: [
+			id: 'USASK.robotics',
+			size: '—',
+			date: '2026',
+			desc: 'Computer vision and robotics development at USask',
+			role: 'Computer Vision & Robotics Developer',
+			organization: 'University of Saskatchewan',
+			status: 'CURRENT',
+			period: '2026 · current role',
+			summary:
+				'Developing computer-vision, geospatial, and autonomous-flight systems for precision-agriculture research at the University of Saskatchewan.',
+			highlights: [
 				{
-					title: 'Team collaboration',
-					detail: 'Built the game in a four-person team using modern Agile practices to coordinate gameplay, UI, and iteration.',
+					title: 'Computer vision',
+					detail: 'Work spans NDVI segmentation and multispectral crop systems.',
 				},
 				{
-					title: 'Physics and mechanics',
-					detail: 'Engineered realistic ball physics and core gameplay mechanics, reducing the time to debug scoring issues by roughly 50%.',
-				},
-				{
-					title: 'State management',
-					detail: 'Used the singleton design pattern for smoother UI transitions and game-state management while reducing duplicated state logic by roughly 40%.',
+					title: 'Research systems',
+					detail: 'Combines geospatial and autonomous-flight development for precision agriculture.',
 				},
 			],
-			coverImage: '/8ball+.png',
-			coverAlt:
-				'8Ball+ gameplay screenshot showing a pool table, cue aim line, player HUD, score, and power-up slots.',
 			links: [
 				{
-					label: 'GitHub',
-					href: 'https://github.com/Akib306/8Ball',
+					label: 'LinkedIn profile',
+					href: 'https://www.linkedin.com/in/akiba8728a/',
+				},
+			],
+		},
+	],
+	projects: [
+		{
+			id: 'campus-find.app',
+			size: '—',
+			date: '2025',
+			desc: 'A campus lost-and-found platform with searchable listings and student messaging',
+			role: 'Team project · full-stack development',
+			status: 'WEB APP',
+			tagline: 'Helping students find and return lost items',
+			year: '2025',
+			platform: 'TypeScript · Next.js · Supabase · PostgreSQL',
+			problem:
+				'Students need a central place to report missing items, browse found items, and arrange returns without sharing personal contact details.',
+			insight:
+				'Searchable listings and campus sign-in give students a practical route from reporting an item to coordinating its return.',
+			decisions: [
+				{
+					title: 'Campus accounts',
+					detail: 'USask email sign-in connects the lost-and-found workflow to the campus community.',
 				},
 				{
-					label: 'Live',
-					href: 'https://akib306.itch.io/8ball-plus',
+					title: 'Item discovery',
+					detail: 'Keyword, category, and location filters help students find relevant reports.',
+				},
+				{
+					title: 'Private coordination',
+					detail: 'Built-in messaging lets students discuss a claim or return without publishing their contact information.',
+				},
+			],
+			links: [
+				{
+					label: 'Visit CampusFind',
+					href: 'https://campus-find-three.vercel.app/',
+				},
+				{
+					label: 'Source on GitHub',
+					href: 'https://github.com/Akib306/Campus-Find',
 				},
 			],
 		},
 		{
 			id: 'seamlessAI.app',
-			size: '369kb',
-			date: '2026-06',
-			desc: 'AI chat workspace with persistent conversations, search, and model-aware prompt controls',
-			role: 'Prototype — chat UX and AI integration',
-			status: 'LIVE',
-			tagline: 'A multi-model conversational AI app built for speed',
-			year: '2026',
-			platform: 'TypeScript · Next.js · PostgreSQL · Redis',
+			size: '—',
+			date: '2025',
+			desc: 'Multi-model AI chat with streaming responses, saved conversations, and full-text search',
+			role: 'Full-stack development',
+			status: 'WEB APP',
+			tagline: 'One workspace for conversations across AI models',
+			year: '2025–2026',
+			platform: 'TypeScript · Next.js · Supabase · Vercel AI SDK',
 			problem:
-				'Multi-model AI chat gets slow and difficult to navigate when provider routing, long conversation history, search, and real-time messaging are not optimized together.',
+				'Switching between AI providers can fragment conversations and make useful answers difficult to find again.',
 			insight:
-				'SeamlessAI focuses on performance across the full chat loop: API response caching, render caching, searchable history, and low-latency messaging.',
+				'A shared chat interface, persistent history, and search keep conversations accessible across model choices.',
 			decisions: [
 				{
-					title: 'API latency',
-					detail: 'Reduced API response latency by 66%, from roughly 300 ms to 100 ms, with Redis read-through and write-through caching.',
+					title: 'Provider integration',
+					detail: 'Google and OpenAI models share a streaming conversation interface through the Vercel AI SDK.',
 				},
 				{
-					title: 'Render performance',
-					detail: 'Reduced render time by 90%, from roughly 1000 ms to 100 ms, using a client-side in-memory LRU cache.',
+					title: 'Persistent history',
+					detail: 'Supabase stores profiles, chats, and messages with row-level security and authenticated access.',
 				},
 				{
-					title: 'Multi-provider workflow',
-					detail: 'Built REST APIs that support chat workflows across OpenAI, Google, and other model providers.',
-				},
-				{
-					title: 'Conversation search',
-					detail: 'Engineered PostgreSQL search for chat history so users can search millions of characters of conversation data efficiently.',
-				},
-				{
-					title: 'Realtime messaging',
-					detail: 'Developed a real-time messaging interface with roughly 50 ms latency using Supabase.',
+					title: 'Search and readable answers',
+					detail: 'Full-text search with highlighting, Markdown, code blocks, and math rendering help users revisit and understand responses.',
 				},
 			],
-			coverImage: '/seamless.png',
-			coverAlt:
-				'Seamless Chat screenshot showing an AI conversation workspace with chat history, search, a GPT 4.1 Nano selector, and message composer.',
 			links: [
 				{
-					label: 'GitHub',
+					label: 'Source on GitHub',
 					href: 'https://github.com/Akib306/seemless.chat',
 				},
+			],
+		},
+		{
+			id: '8ball+.game',
+			size: '—',
+			date: '2025',
+			desc: 'An arcade pool game with turn-based scoring and power-ups',
+			role: 'Team project · ball physics, scoring, scene management',
+			status: 'GAME',
+			tagline: 'Arcade pool with a focus on physics and game flow',
+			year: '2024–2025',
+			platform: 'Godot · GDScript',
+			problem:
+				'A pool game needs reliable ball motion, clear scoring rules, and predictable transitions between the menu, match, and result screen.',
+			insight:
+				'Keeping physics, scoring, and scene transitions consistent makes each match easier to follow and debug.',
+			decisions: [
 				{
-					label: 'Live',
-					href: 'https://seamlessai.chat',
+					title: 'Ball simulation',
+					detail: 'Implemented ball generation and triangle spawning, and refined rotation, momentum, and angular motion.',
+				},
+				{
+					title: 'Scoring and rules',
+					detail: 'Built scoring logic, the score rack UI, win conditions, and black-ball handling.',
+				},
+				{
+					title: 'Scene transitions',
+					detail: 'Implemented a singleton SceneManager for menu, game, and game-over transitions, including the winner display and confetti.',
+				},
+			],
+			links: [
+				{
+					label: 'Play 8Ball+',
+					href: 'https://akib306.itch.io/8ball-plus',
+				},
+				{
+					label: 'Source on GitHub',
+					href: 'https://github.com/Akib306/8Ball',
 				},
 			],
 		},

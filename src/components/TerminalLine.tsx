@@ -4,6 +4,7 @@ import type {
 	TerminalLine as TerminalLineModel,
 } from '#/types'
 
+import { ExperienceList } from './ExperienceList'
 import { ProjectList } from './ProjectList'
 
 type TerminalLineProps = {
@@ -39,13 +40,37 @@ export function TerminalLine({
 			)
 		case 'output':
 			return (
-				<div className="break-words text-terminal-text">
+				<div className="max-w-[120ch] break-words text-terminal-text">
 					{line.text}
 				</div>
 			)
 		case 'error':
 			return (
 				<div className="break-words text-terminal-red">{line.text}</div>
+			)
+		case 'socials':
+			return (
+				<ul aria-label="Social profiles" className="max-w-[120ch]">
+					{line.links.map((link) => (
+						<li
+							key={link.href}
+							className="flex flex-wrap items-baseline gap-x-3"
+						>
+							<span className="text-terminal-muted">
+								{link.label}
+							</span>
+							<a
+								href={link.href}
+								target="_blank"
+								rel="noreferrer"
+								className="terminal-link min-w-0 break-all"
+								aria-label={`${link.label} (opens in a new tab)`}
+							>
+								{link.href}
+							</a>
+						</li>
+					))}
+				</ul>
 			)
 		case 'list':
 			return (
@@ -56,6 +81,16 @@ export function TerminalLine({
 					cursorProjectId={cursorProjectId}
 					isProjectOpen={isProjectOpen}
 					onToggleProject={onToggleProject}
+				/>
+			)
+		case 'experience-list':
+			return (
+				<ExperienceList
+					portfolio={portfolio}
+					experienceIds={line.experienceIds}
+					blockId={line.blockId ?? line.id}
+					isExperienceOpen={isProjectOpen}
+					onToggleExperience={onToggleProject}
 				/>
 			)
 	}

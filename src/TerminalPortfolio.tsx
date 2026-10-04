@@ -7,11 +7,11 @@ import type { Project, TerminalLine as TerminalLineModel } from '#/types'
 import { runPortfolioCommand } from './commands'
 
 const COMMAND_CHIPS = [
-	{ label: 'ls', command: 'ls' },
+	{ label: 'experiences', command: 'ls experiences' },
+	{ label: 'projects', command: 'ls projects' },
 	{ label: 'whoami', command: 'whoami' },
 	{ label: 'location', command: 'cat location.txt' },
-	{ label: 'focus', command: 'cat focus.txt' },
-	{ label: 'contact', command: 'cat contact.txt' },
+	{ label: 'socials', command: 'socials' },
 	{ label: 'help', command: 'help' },
 	{ label: 'clear', command: 'clear' },
 ] as const
@@ -19,9 +19,10 @@ const COMMAND_CHIPS = [
 type OpenProjectMap = Record<string, boolean>
 
 export function TerminalPortfolio() {
-	const [lines, setLines] = useState<ReadonlyArray<TerminalLineModel>>([])
+	const [lines, setLines] = useState<ReadonlyArray<TerminalLineModel>>(() =>
+		createBootLines('boot-0'),
+	)
 	const [input, setInput] = useState('')
-	const [booted, setBooted] = useState(false)
 	const [openProjects, setOpenProjects] = useState<OpenProjectMap>({})
 	const [cursorIndex, setCursorIndex] = useState(0)
 	const [activeListBlockId, setActiveListBlockId] = useState('')
@@ -32,94 +33,25 @@ export function TerminalPortfolio() {
 	const scrollRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const blockCounterRef = useRef(0)
-	const bootRunRef = useRef(0)
-	const bootTimersRef = useRef<Array<ReturnType<typeof setTimeout>>>([])
-	const scrollFrameRef = useRef<number | null>(null)
+	const followOutputRef = useRef(false)
+	const [announcement, setAnnouncement] = useState('')
+	const [showLatest, setShowLatest] = useState(false)
+	const [replayBlockId, setReplayBlockId] = useState('')
 
 	const makeBlockId = useCallback((prefix: string) => {
 		blockCounterRef.current += 1
 		return `${prefix}-${blockCounterRef.current}`
 	}, [])
 
-	const clearBootTimers = useCallback(() => {
-		bootTimersRef.current.forEach((timer) => clearTimeout(timer))
-		bootTimersRef.current = []
-	}, [])
-
-	const startBoot = useCallback(() => {
-		clearBootTimers()
-
-		const bootRunId = bootRunRef.current + 1
-		bootRunRef.current = bootRunId
-		const bootBlockId = makeBlockId('boot')
-		const bootLines = createBootLines(bootBlockId)
-
-		setLines([])
-		setInput('')
-		setOpenProjects({})
-		setBooted(false)
-		setCursorIndex(0)
-		setActiveListBlockId(bootBlockId)
-		setActiveProjectIds(portfolio.projects.map((project) => project.id))
-
-		const tick = (index: number) => {
-			if (bootRunRef.current !== bootRunId) {
-				return
-			}
-
-			if (index >= bootLines.length) {
-				setBooted(true)
-				return
-			}
-
-			setLines((current) => [...current, bootLines[index]])
-
-			const timer = setTimeout(
-				() => tick(index + 1),
-				index < 2 ? 220 : 320,
-			)
-			bootTimersRef.current.push(timer)
-		}
-
-		const timer = setTimeout(() => tick(0), 220)
-		bootTimersRef.current.push(timer)
-	}, [clearBootTimers, makeBlockId])
-
 	useEffect(() => {
-		startBoot()
-		return () => {
-			bootRunRef.current += 1
-			clearBootTimers()
-		}
-	}, [clearBootTimers, startBoot])
-
-	useEffect(() => {
-		if (scrollFrameRef.current !== null) {
-			cancelAnimationFrame(scrollFrameRef.current)
-		}
-
-		scrollFrameRef.current = requestAnimationFrame(() => {
-			if (!scrollRef.current) {
-				return
+		if (!followOutputRef.current) return
+		const frame = requestAnimationFrame(() => {
+			if (scrollRef.current) {
+				scrollRef.current.scrollTop = scrollRef.current.scrollHeight
 			}
-
-			scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-			scrollFrameRef.current = null
 		})
-
-		return () => {
-			if (scrollFrameRef.current !== null) {
-				cancelAnimationFrame(scrollFrameRef.current)
-				scrollFrameRef.current = null
-			}
-		}
-	}, [booted, lines, openProjects])
-
-	useEffect(() => {
-		if (booted) {
-			inputRef.current?.focus()
-		}
-	}, [booted])
+		return () => cancelAnimationFrame(frame)
+	}, [lines])
 
 	const cursorProjectId = activeProjectIds[cursorIndex]
 
@@ -141,9 +73,15 @@ export function TerminalPortfolio() {
 
 	const runCommand = useCallback(
 		(command: string) => {
-			if (!booted) {
+			if (!command.trim()) {
 				return
 			}
+			const output = scrollRef.current
+			followOutputRef.current = Boolean(
+				output &&
+				output.scrollHeight - output.scrollTop - output.clientHeight <
+					80,
+			)
 
 			const blockId = makeBlockId('cmd')
 			const promptLine: TerminalLineModel = {
@@ -155,9 +93,25 @@ export function TerminalPortfolio() {
 			const result = runPortfolioCommand(command, portfolio, blockId)
 
 			if (result.shouldClear) {
-				startBoot()
+				const bootBlockId = makeBlockId('boot')
+				followOutputRef.current = false
+				if (scrollRef.current) scrollRef.current.scrollTop = 0
+				setLines(createBootLines(bootBlockId))
+				setOpenProjects({})
+				setActiveListBlockId('')
+				setActiveProjectIds([])
+				setReplayBlockId(bootBlockId)
+				setCursorIndex(0)
+				setAnnouncement(
+					'Session reset. Introduction and experiences restored.',
+				)
+				setShowLatest(false)
 				return
 			}
+			setShowLatest(!followOutputRef.current)
+			setAnnouncement(
+				`${command.trim()} completed. Read the terminal output.`,
+			)
 
 			setLines((current) => [...current, promptLine, ...result.lines])
 
@@ -165,6 +119,10 @@ export function TerminalPortfolio() {
 			if (listLine?.kind === 'list') {
 				setActiveListBlockId(listLine.blockId ?? blockId)
 				setActiveProjectIds(listLine.projectIds)
+				setCursorIndex(0)
+			} else {
+				setActiveListBlockId('')
+				setActiveProjectIds([])
 				setCursorIndex(0)
 			}
 
@@ -175,19 +133,22 @@ export function TerminalPortfolio() {
 					[getOpenProjectKey(blockId, openProjectId)]: true,
 				}))
 			}
+			if (result.openExperienceId) {
+				const experienceId = result.openExperienceId
+				setOpenProjects((current) => ({
+					...current,
+					[getOpenProjectKey(blockId, experienceId)]: true,
+				}))
+			}
 		},
-		[booted, makeBlockId, startBoot],
+		[makeBlockId],
 	)
 
 	const handleKeyDown = useCallback(
 		(event: React.KeyboardEvent<HTMLInputElement>) => {
-			if (event.key === 'Enter') {
-				runCommand(input)
-				setInput('')
-				return
-			}
+			if (event.nativeEvent.isComposing) return
 
-			if (event.key === 'ArrowUp') {
+			if (event.altKey && event.key === 'ArrowUp') {
 				event.preventDefault()
 				if (activeProjectIds.length === 0) {
 					return
@@ -196,7 +157,7 @@ export function TerminalPortfolio() {
 				return
 			}
 
-			if (event.key === 'ArrowDown') {
+			if (event.altKey && event.key === 'ArrowDown') {
 				event.preventDefault()
 				if (activeProjectIds.length === 0) {
 					return
@@ -207,7 +168,12 @@ export function TerminalPortfolio() {
 				return
 			}
 
-			if (event.key === 'Tab' && activeListBlockId && cursorProjectId) {
+			if (
+				event.altKey &&
+				event.key === 'ArrowRight' &&
+				activeListBlockId &&
+				cursorProjectId
+			) {
 				event.preventDefault()
 				toggleProject(activeListBlockId, cursorProjectId)
 			}
@@ -216,42 +182,53 @@ export function TerminalPortfolio() {
 			activeListBlockId,
 			activeProjectIds.length,
 			cursorProjectId,
-			input,
-			runCommand,
 			toggleProject,
 		],
 	)
 
 	const renderedLines = useMemo(
 		() =>
-			lines.map((line) => (
-				<TerminalLine
+			lines.map((line, index) => (
+				<div
 					key={line.id}
-					line={line}
-					portfolio={portfolio}
-					cursorProjectId={
-						line.blockId === activeListBlockId
-							? cursorProjectId
+					className={
+						line.blockId === replayBlockId
+							? 'terminal-boot-line'
 							: undefined
 					}
-					isProjectOpen={isProjectOpen}
-					onToggleProject={toggleProject}
-				/>
+					style={
+						line.blockId === replayBlockId
+							? { animationDelay: `${index * 60}ms` }
+							: undefined
+					}
+				>
+					<TerminalLine
+						line={line}
+						portfolio={portfolio}
+						cursorProjectId={
+							line.blockId === activeListBlockId
+								? cursorProjectId
+								: undefined
+						}
+						isProjectOpen={isProjectOpen}
+						onToggleProject={toggleProject}
+					/>
+				</div>
 			)),
 		[
 			activeListBlockId,
 			cursorProjectId,
 			isProjectOpen,
 			lines,
+			replayBlockId,
 			toggleProject,
 		],
 	)
 
 	return (
 		<main
-			className="terminal-frame relative flex h-svh min-h-[520px] cursor-text flex-col overflow-hidden bg-terminal-bg font-mono text-xs leading-relaxed text-terminal-text sm:h-dvh sm:min-h-[640px] sm:text-sm"
+			className="terminal-frame relative flex h-dvh min-h-[240px] flex-col overflow-hidden bg-terminal-bg font-mono text-sm leading-relaxed text-terminal-text"
 			aria-label="Interactive terminal portfolio"
-			onClick={() => inputRef.current?.focus()}
 		>
 			<div className="terminal-crt-scan" aria-hidden="true" />
 			<div className="terminal-crt-vignette" aria-hidden="true" />
@@ -274,25 +251,47 @@ export function TerminalPortfolio() {
 				</span>
 				<span className="flex-1" />
 				<span role="status" aria-label="Terminal status">
-					200 OK
+					~
 				</span>
 			</div>
+			<h1 className="sr-only">{portfolio.name}</h1>
 
 			<div
 				ref={scrollRef}
-				className="terminal-scroll relative z-[3] flex-1 overflow-auto overflow-x-hidden px-3 py-4 sm:px-[22px] sm:py-[18px]"
+				className="terminal-scroll relative z-[3] min-h-0 flex-1 overflow-auto overflow-x-hidden px-3 py-4 sm:px-[22px] sm:py-[18px]"
 				role="region"
-				aria-live="polite"
-				aria-relevant="additions text"
 				aria-label="Terminal output"
+				onScroll={(event) => {
+					const output = event.currentTarget
+					if (
+						output.scrollHeight -
+							output.scrollTop -
+							output.clientHeight <
+						80
+					)
+						setShowLatest(false)
+				}}
 			>
 				{renderedLines}
-
-				{booted ? (
-					<div className="mt-3.5 flex flex-wrap items-center gap-1.5">
-						<label htmlFor="terminal-command" className="sr-only">
-							Terminal command
-						</label>
+			</div>
+			<div className="relative z-[3] shrink-0 border-t border-terminal-border bg-terminal-bg px-3 pb-3 sm:px-[22px]">
+				<form
+					className="mt-3 flex flex-wrap items-center gap-1.5"
+					onSubmit={(event) => {
+						event.preventDefault()
+						if (!input.trim()) return
+						runCommand(input)
+						setInput('')
+						inputRef.current?.focus()
+					}}
+				>
+					<label htmlFor="terminal-command" className="sr-only">
+						Terminal command
+					</label>
+					<span
+						aria-hidden="true"
+						className="hidden items-center gap-1.5 sm:inline-flex"
+					>
 						<span className="text-terminal-green">guest</span>
 						<span className="text-terminal-muted">@</span>
 						<span className="text-terminal-blue">
@@ -300,59 +299,72 @@ export function TerminalPortfolio() {
 						</span>
 						<span className="text-terminal-muted">:</span>
 						<span className="text-terminal-purple">~</span>
-						<span className="text-terminal-text">$</span>
-						<input
-							id="terminal-command"
-							ref={inputRef}
-							autoFocus
-							value={input}
-							onChange={(event) => setInput(event.target.value)}
-							onKeyDown={handleKeyDown}
-							className="min-w-[10rem] flex-1 basis-[10rem] border-0 bg-transparent font-[inherit] text-[inherit] text-terminal-text outline-none placeholder:text-terminal-muted focus-visible:outline-2 focus-visible:outline-terminal-blue"
-							placeholder="type a command"
-							autoComplete="off"
-							spellCheck={false}
-							aria-describedby="terminal-keyboard-help"
-						/>
-						<span
-							aria-hidden="true"
-							className="terminal-caret text-terminal-blue"
-						>
-							▍
-						</span>
-					</div>
-				) : null}
+					</span>
+					<span className="text-terminal-text">$</span>
+					<input
+						id="terminal-command"
+						ref={inputRef}
+						value={input}
+						onChange={(event) => setInput(event.target.value)}
+						onKeyDown={handleKeyDown}
+						className="min-w-0 flex-1 bg-transparent px-1 py-2 font-[inherit] text-base text-terminal-text outline-none placeholder:text-terminal-muted"
+						placeholder="type a command"
+						autoComplete="off"
+						autoCapitalize="none"
+						autoCorrect="off"
+						enterKeyHint="enter"
+						spellCheck={false}
+						aria-describedby="terminal-keyboard-help"
+					/>
+				</form>
 
-				{booted ? (
-					<div
-						className="mt-3 flex flex-wrap gap-1.5"
-						role="toolbar"
-						aria-label="Command shortcuts"
+				{showLatest ? (
+					<button
+						type="button"
+						className="terminal-chip mt-2"
+						onClick={() => {
+							if (scrollRef.current)
+								scrollRef.current.scrollTop =
+									scrollRef.current.scrollHeight
+							setShowLatest(false)
+						}}
 					>
-						{COMMAND_CHIPS.map((chip) => (
-							<button
-								key={chip.command}
-								type="button"
-								aria-label={`Run ${chip.command}`}
-								onClick={(event) => {
-									event.stopPropagation()
-									runCommand(chip.command)
-									setInput('')
-								}}
-								className="cursor-pointer rounded-[2px] border border-terminal-border bg-terminal-panel px-3 py-1 text-[13px] font-[inherit] text-terminal-text transition-colors hover:border-terminal-blue/60 hover:text-terminal-text-bright"
-							>
-								{chip.label}
-							</button>
-						))}
-					</div>
+						Show latest output ↓
+					</button>
 				) : null}
+				<div
+					className="terminal-scroll mt-3 flex gap-1.5 overflow-x-auto pb-1 sm:flex-wrap"
+					role="group"
+					aria-label="Command shortcuts"
+				>
+					{COMMAND_CHIPS.map((chip) => (
+						<button
+							key={chip.command}
+							type="button"
+							aria-label={`Run ${chip.command}`}
+							onClick={(event) => {
+								event.stopPropagation()
+								runCommand(chip.command)
+							}}
+							className="terminal-chip"
+						>
+							{chip.label}
+						</button>
+					))}
+				</div>
 			</div>
+			<p role="status" className="sr-only">
+				{announcement}
+			</p>
 
 			<div
 				id="terminal-keyboard-help"
 				className="relative z-[3] flex flex-wrap gap-3 border-t border-terminal-border px-3 py-2 text-[11px] text-terminal-muted sm:px-4"
 			>
-				<span>↑↓ select · tab toggle · enter run</span>
+				<span className="hidden sm:inline">
+					Tab navigate · Enter run · Alt+↑↓ select · Alt+→ expand
+				</span>
+				<span className="sm:hidden">Enter run · swipe shortcuts →</span>
 				<span className="flex-1" />
 				<span>{portfolio.domain}</span>
 			</div>
@@ -371,7 +383,7 @@ function createBootLines(blockId: string): ReadonlyArray<TerminalLineModel> {
 		{
 			id: `${blockId}:system:1`,
 			kind: 'system',
-			text: 'click a chip, run a command, or click any project to expand it',
+			text: 'open an experience, or run ls projects to explore my projects',
 			blockId,
 		},
 		{ id: `${blockId}:spacer:0`, kind: 'spacer', blockId },
@@ -379,6 +391,12 @@ function createBootLines(blockId: string): ReadonlyArray<TerminalLineModel> {
 			id: `${blockId}:prompt:whoami`,
 			kind: 'prompt',
 			command: 'whoami',
+			blockId,
+		},
+		{
+			id: `${blockId}:output:name`,
+			kind: 'output',
+			text: `${portfolio.name} · ${portfolio.role}`,
 			blockId,
 		},
 		{
@@ -399,29 +417,19 @@ function createBootLines(blockId: string): ReadonlyArray<TerminalLineModel> {
 			text: `${portfolio.location}`,
 			blockId,
 		},
-		{
-			id: `${blockId}:prompt:focus`,
-			kind: 'prompt',
-			command: 'cat focus.txt',
-			blockId,
-		},
-		{
-			id: `${blockId}:output:focus`,
-			kind: 'output',
-			text: `${portfolio.focus}`,
-			blockId,
-		},
 		{ id: `${blockId}:spacer:1`, kind: 'spacer', blockId },
 		{
-			id: `${blockId}:prompt:projects`,
+			id: `${blockId}:prompt:experiences`,
 			kind: 'prompt',
-			command: 'ls /projects',
+			command: 'ls experiences',
 			blockId,
 		},
 		{
 			id: `${blockId}:list`,
-			kind: 'list',
-			projectIds: portfolio.projects.map((project) => project.id),
+			kind: 'experience-list',
+			experienceIds: portfolio.experience.map(
+				(experience) => experience.id,
+			),
 			blockId,
 		},
 		{ id: `${blockId}:spacer:2`, kind: 'spacer', blockId },

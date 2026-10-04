@@ -1,6 +1,6 @@
 # Terminal Portfolio
 
-This is a TanStack Start portfolio site that presents the homepage as an interactive terminal. Visitors can read boot output, run commands, open project rows, and view inline project case studies.
+This is a TanStack Start portfolio site that presents the homepage as an interactive terminal. Visitors can read immediately rendered introductory content and experiences, run commands, open project rows, and view inline project case studies.
 
 ## Quick Start
 
@@ -56,11 +56,11 @@ Note: Vite 8 expects Node `20.19+` or `22.12+`. The build may still complete on 
 
 `src/routes/__root.tsx` is the document shell. It owns metadata, viewport settings, the JetBrains Mono font link, the global stylesheet link, and the final `<Scripts />` injection.
 
-`src/TerminalPortfolio.tsx` is the main interactive terminal. It manages boot timing, command input, scroll behavior, selected project state, open project state, and keyboard shortcuts.
+`src/TerminalPortfolio.tsx` is the main interactive terminal. It renders the initial content on the server and manages command input, scroll behavior, selected project state, open project state, and keyboard shortcuts.
 
-`src/commands.ts` is the command engine. It converts terminal commands such as `help`, `ls`, `projects`, `whoami`, `cat contact.txt`, `cat <project-id>`, and `clear` into renderable terminal lines.
+`src/commands.ts` is the command engine. It converts terminal commands such as `help`, `ls`, `projects`, `whoami`, `socials`, `cat socials.txt`, `cat <project-id>`, and `clear` into renderable terminal lines.
 
-`src/data/portfolio.ts` is the content source for the portfolio. Update this file when changing the name, role, contact details, project list, project metadata, or case study copy.
+`src/data/portfolio.ts` is the content source for the portfolio. Update this file when changing the name, role, social profile links, project list, project metadata, or case study copy.
 
 `src/types.ts` contains the shared TypeScript shapes for portfolio data, projects, terminal lines, and command results.
 
@@ -68,13 +68,15 @@ Note: Vite 8 expects Node `20.19+` or `22.12+`. The build may still complete on 
 
 `src/components/TerminalLine.tsx` renders one terminal line based on its kind: system, prompt, output, error, spacer, or project list.
 
-`src/components/ProjectList.tsx` renders the terminal-style project file list. It owns each expandable row button, `aria-expanded` state, mobile-friendly row layout, and the case study region wrapper.
+`src/components/ProjectList.tsx` renders the terminal-style project file list. It owns each expandable row button, `aria-expanded` state, stacked card layout matching experiences, and the case study region wrapper.
 
-`src/components/CaseStudyInLine.tsx` renders the expanded project case study: tagline, metadata, problem, insight, decisions, and image placeholder.
+`src/components/ExperienceList.tsx` renders expandable experience rows, role summaries, responsibilities supported by profile evidence, timelines, and profile links.
+
+`src/components/CaseStudyInLine.tsx` renders the expanded project case study: tagline, metadata, problem, insight, project highlights and verified source/demo links.
 
 ## Styling
 
-`src/styles.css` imports Tailwind and defines the terminal-specific theme tokens. It also contains custom CSS for the CRT scanline overlay, vignette overlay, custom scrollbars, blinking caret, case study expand animation, and project row states.
+`src/styles.css` imports Tailwind and defines the terminal-specific theme tokens. It also contains custom CSS for the CRT scanline overlay, vignette overlay, custom scrollbars, native input caret styling, clear fade-in, case study expand animation, and project row states.
 
 Most layout, spacing, borders, typography sizing, and responsive behavior live directly in component class names with Tailwind utilities. Keep custom CSS in `styles.css` for effects or tokens that are awkward to express as utilities.
 
@@ -96,12 +98,16 @@ Without Nitro, Vercel can deploy the build but return `404 NOT_FOUND` at `/` bec
 
 `src/TerminalPortfolio.test.tsx` covers the main terminal behavior:
 
-- boot output renders and the prompt becomes available
+- initial content and the prompt render immediately
 - commands can be submitted from the input
 - project rows expand and collapse
 - `cat <project-id>` opens the matching case study
 - unknown commands show an error
-- `clear` restarts the session
+- `clear` resets the introduction and experiences with a fade-in while retaining the prompt
+- relative directory paths and expandable experience files work
+- Tab navigation and project focus are preserved
+- project expansion and new commands preserve reading position
+- command whitespace, draft preservation, and command-based social links work
 
 The component test uses Vitest with `happy-dom`. `happy-dom` is used because the installed `jsdom` dependency path currently fails during Vitest worker startup in this project.
 
@@ -117,7 +123,7 @@ The component test uses Vitest with `happy-dom`. `happy-dom` is used because the
 
 ## Updating Portfolio Content
 
-For content-only updates, start in `src/data/portfolio.ts`. Project IDs are user-facing because terminal commands use them, for example `cat PROJECT_ALPHA.app`.
+For content-only updates, start in `src/data/portfolio.ts`. Project IDs are user-facing because terminal commands use them, for example `cat campus-find.app`.
 
 If you add a new field to portfolio data, update `src/types.ts` first, then update the component that renders it.
 
@@ -132,3 +138,11 @@ pnpm lint
 pnpm test
 pnpm build
 ```
+
+## Portfolio Review
+
+See `PORTFOLIO_AUDIT.md` for findings, fixes, content sources, and verification limits. The copy is based on the current GitHub profile, project READMEs, and the 8Ball contribution record. The BrowserUse connector verified the public LinkedIn preview and available descriptions. Full job descriptions remain restricted; conflicting indexed robotics dates are recorded in the audit.
+
+The command input supports native form submission. Tab moves between controls; Alt+Up/Down selects a project and Alt+Right expands it. The command bar stays visible, and shortcuts preserve the text draft. `clear` resets the introduction and experiences with the original fade-in behavior. Directories are relative to `~`: use `ls projects`, `ls experiences`, and `cat experiences/<id>` to read details. The input uses its native caret and Enter submission. Experiences appear by default; projects are available through `ls projects` or the projects shortcut. On mobile, command shortcuts scroll horizontally.
+
+The name-and-profile navigation bar has been removed. `socials` prints LinkedIn and GitHub links; older contact commands resolve to the same social links. `focus.txt` is removed, and `whoami` describes the development focus. Terminal prose uses a maximum width of 120 characters and wraps to fit the viewport.

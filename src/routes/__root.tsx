@@ -12,12 +12,12 @@ export const Route = createRootRoute({
 				content: 'width=device-width, initial-scale=1',
 			},
 			{
-				title: 'Akib Portfolio | Terminal',
+				title: 'Motasin Akib | Software Developer',
 			},
 			{
 				name: 'description',
 				content:
-					"Interactive terminal portfolio showcasing Akib's projects, case studies, and contact information.",
+					'Motasin Akib — Computer Science at the University of Saskatchewan. Explore full-stack applications, AI interfaces, games, and current experience.',
 			},
 			{
 				name: 'theme-color',
@@ -25,6 +25,8 @@ export const Route = createRootRoute({
 			},
 		],
 		links: [
+			{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+			{ rel: 'manifest', href: '/manifest.json' },
 			{
 				rel: 'preconnect',
 				href: 'https://fonts.googleapis.com',

@@ -3,11 +3,6 @@ export type ProjectDecision = {
 	detail: string
 }
 
-export type ProjectLink = {
-	label: string
-	href: string
-}
-
 export type Project = {
 	id: string
 	size: string
@@ -21,9 +16,21 @@ export type Project = {
 	problem: string
 	insight: string
 	decisions: ReadonlyArray<ProjectDecision>
-	coverImage?: string
-	coverAlt?: string
-	links?: ReadonlyArray<ProjectLink>
+	links?: ReadonlyArray<PortfolioHighlight>
+}
+
+export type Experience = {
+	id: string
+	size: string
+	date: string
+	desc: string
+	role: string
+	organization: string
+	status: string
+	period: string
+	summary: string
+	highlights: ReadonlyArray<ProjectDecision>
+	links?: ReadonlyArray<PortfolioHighlight>
 }
 
 export type PortfolioHighlight = {
@@ -38,10 +45,10 @@ export type Portfolio = {
 	role: string
 	blurb: string
 	location: string
-	focus: string
-	contact: string
+	socials: ReadonlyArray<PortfolioHighlight>
 	highlight?: PortfolioHighlight
 	projects: ReadonlyArray<Project>
+	experience: ReadonlyArray<Experience>
 }
 
 export type TerminalLineKind =
@@ -51,6 +58,8 @@ export type TerminalLineKind =
 	| 'error'
 	| 'spacer'
 	| 'list'
+	| 'experience-list'
+	| 'socials'
 
 export type TerminalLineBase = {
 	id: string
@@ -77,18 +86,32 @@ export type TerminalProjectListLine = TerminalLineBase & {
 	projectIds: ReadonlyArray<Project['id']>
 }
 
+export type TerminalExperienceListLine = TerminalLineBase & {
+	kind: 'experience-list'
+	experienceIds: ReadonlyArray<Experience['id']>
+}
+
+export type TerminalSocialsLine = TerminalLineBase & {
+	kind: 'socials'
+	links: ReadonlyArray<PortfolioHighlight>
+}
+
 export type TerminalLine =
 	| TerminalTextLine
 	| TerminalPromptLine
 	| TerminalSpacerLine
 	| TerminalProjectListLine
+	| TerminalExperienceListLine
+	| TerminalSocialsLine
 
 export type CommandName =
 	| 'help'
 	| 'ls'
 	| 'projects'
+	| 'experience'
 	| 'whoami'
 	| 'contact'
+	| 'socials'
 	| 'clear'
 	| 'cat'
 
@@ -100,5 +123,6 @@ export type CommandContext = {
 export type CommandResult = {
 	lines: ReadonlyArray<TerminalLine>
 	openProjectId?: Project['id']
+	openExperienceId?: Experience['id']
 	shouldClear?: boolean
 }

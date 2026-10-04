@@ -8,7 +8,7 @@
 	--color-terminal-text: #abb2bf;
 	--color-terminal-text-soft: #c5cad3;
 	--color-terminal-text-bright: #dcdfe4;
-	--color-terminal-muted: #5c6370;
+	--color-terminal-muted: #929bad;
 	--color-terminal-red: #e06c75;
 	--color-terminal-yellow: #e5c07b;
 	--color-terminal-green: #98c379;
@@ -35,6 +35,51 @@ body {
 	font-family:
 		'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas,
 		'Liberation Mono', monospace;
+}
+
+.terminal-link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 32px;
+	color: var(--color-terminal-blue);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.terminal-chip {
+	flex-shrink: 0;
+	min-height: 36px;
+	cursor: pointer;
+	border: 1px solid var(--color-terminal-border);
+	border-radius: 2px;
+	background: var(--color-terminal-panel);
+	padding: 4px 12px;
+	font: inherit;
+	font-size: 13px;
+	color: var(--color-terminal-text);
+}
+
+.terminal-chip:hover:not(:disabled) {
+	border-color: var(--color-terminal-blue);
+	color: var(--color-terminal-text-bright);
+}
+
+.terminal-chip:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+a:focus-visible,
+button:focus-visible {
+	outline: 2px solid var(--color-terminal-blue);
+	outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+	.terminal-chip,
+	.terminal-link {
+		min-height: 44px;
+	}
 }
 
 .terminal-crt-scan,
@@ -81,8 +126,17 @@ body {
 	border: 2px solid var(--color-terminal-bg);
 }
 
-.terminal-caret {
-	animation: terminal-blink 1s steps(2) infinite;
+#terminal-command {
+	caret-color: var(--color-terminal-blue);
+}
+
+::selection {
+	background: var(--color-terminal-blue);
+	color: var(--color-terminal-bg);
+}
+
+.terminal-boot-line {
+	animation: terminal-boot-reveal 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .terminal-case {
@@ -90,16 +144,7 @@ body {
 	background: rgba(255, 255, 255, 0.015);
 }
 
-.terminal-case-placeholder {
-	background: repeating-linear-gradient(
-		45deg,
-		var(--color-terminal-bg),
-		var(--color-terminal-bg) 6px,
-		var(--color-terminal-panel) 6px,
-		var(--color-terminal-panel) 12px
-	);
-}
-
+.terminal-list-row:hover,
 .terminal-project-row:hover {
 	background: rgba(255, 255, 255, 0.04);
 }
@@ -113,15 +158,20 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.terminal-caret,
+	.terminal-boot-line,
 	.terminal-case {
 		animation: none;
 	}
 }
 
-@keyframes terminal-blink {
-	50% {
+@keyframes terminal-boot-reveal {
+	from {
 		opacity: 0;
+		transform: translateY(2px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 

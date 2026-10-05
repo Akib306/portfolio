@@ -30,6 +30,9 @@ export function TerminalPortfolio() {
 		ReadonlyArray<Project['id']>
 	>([])
 
+	const shortcutsRef = useRef<HTMLDivElement>(null)
+	const [shortcutScroll, setShortcutScroll] = useState(0)
+	const [shortcutsOverflow, setShortcutsOverflow] = useState(false)
 	const scrollRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const blockCounterRef = useRef(0)
@@ -52,6 +55,29 @@ export function TerminalPortfolio() {
 		})
 		return () => cancelAnimationFrame(frame)
 	}, [lines])
+
+	useEffect(() => {
+		const shortcuts = shortcutsRef.current
+		if (!shortcuts) return
+		const measure = () => {
+			const maxScroll = shortcuts.scrollWidth - shortcuts.clientWidth
+			setShortcutsOverflow(maxScroll > 1)
+			setShortcutScroll(
+				maxScroll > 0 ? (shortcuts.scrollLeft / maxScroll) * 100 : 0,
+			)
+		}
+		measure()
+		const observer =
+			typeof ResizeObserver === 'undefined'
+				? undefined
+				: new ResizeObserver(measure)
+		observer?.observe(shortcuts)
+		window.addEventListener('resize', measure)
+		return () => {
+			observer?.disconnect()
+			window.removeEventListener('resize', measure)
+		}
+	}, [])
 
 	const cursorProjectId = activeProjectIds[cursorIndex]
 
@@ -103,7 +129,7 @@ export function TerminalPortfolio() {
 				setReplayBlockId(bootBlockId)
 				setCursorIndex(0)
 				setAnnouncement(
-					'Session reset. Introduction and experiences restored.',
+					'Session reset. Portrait, introduction and experiences restored.',
 				)
 				setShowLatest(false)
 				return
@@ -333,7 +359,19 @@ export function TerminalPortfolio() {
 					</button>
 				) : null}
 				<div
-					className="terminal-scroll mt-3 flex gap-1.5 overflow-x-auto pb-1 sm:flex-wrap"
+					ref={shortcutsRef}
+					id="terminal-command-shortcuts"
+					className="terminal-command-shortcuts mt-3 flex gap-1.5 overflow-x-auto p-1 sm:flex-wrap"
+					onScroll={(event) => {
+						const shortcuts = event.currentTarget
+						const maxScroll =
+							shortcuts.scrollWidth - shortcuts.clientWidth
+						setShortcutScroll(
+							maxScroll > 0
+								? (shortcuts.scrollLeft / maxScroll) * 100
+								: 0,
+						)
+					}}
 					role="group"
 					aria-label="Command shortcuts"
 				>
@@ -352,6 +390,28 @@ export function TerminalPortfolio() {
 						</button>
 					))}
 				</div>
+				<input
+					type="range"
+					className="terminal-command-scrollbar sm:hidden"
+					aria-label="Scroll command shortcuts"
+					aria-controls="terminal-command-shortcuts"
+					min={0}
+					max={100}
+					step="any"
+					value={shortcutScroll}
+					disabled={!shortcutsOverflow}
+					onChange={(event) => {
+						const value = Number(event.target.value)
+						setShortcutScroll(value)
+						const shortcuts = shortcutsRef.current
+						if (shortcuts)
+							shortcuts.scrollLeft =
+								((shortcuts.scrollWidth -
+									shortcuts.clientWidth) *
+									value) /
+								100
+					}}
+				/>
 			</div>
 			<p role="status" className="sr-only">
 				{announcement}
@@ -387,36 +447,7 @@ function createBootLines(blockId: string): ReadonlyArray<TerminalLineModel> {
 			blockId,
 		},
 		{ id: `${blockId}:spacer:0`, kind: 'spacer', blockId },
-		{
-			id: `${blockId}:prompt:whoami`,
-			kind: 'prompt',
-			command: 'whoami',
-			blockId,
-		},
-		{
-			id: `${blockId}:output:name`,
-			kind: 'output',
-			text: `${portfolio.name} · ${portfolio.role}`,
-			blockId,
-		},
-		{
-			id: `${blockId}:output:role`,
-			kind: 'output',
-			text: `${portfolio.blurb}`,
-			blockId,
-		},
-		{
-			id: `${blockId}:prompt:location`,
-			kind: 'prompt',
-			command: 'cat location.txt',
-			blockId,
-		},
-		{
-			id: `${blockId}:output:location`,
-			kind: 'output',
-			text: `${portfolio.location}`,
-			blockId,
-		},
+		{ id: `${blockId}:profile`, kind: 'profile', blockId },
 		{ id: `${blockId}:spacer:1`, kind: 'spacer', blockId },
 		{
 			id: `${blockId}:prompt:experiences`,

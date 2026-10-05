@@ -4,6 +4,7 @@ import type {
 	TerminalLine as TerminalLineModel,
 } from '#/types'
 
+import { AsciiPortrait } from './AsciiPortrait'
 import { ExperienceList } from './ExperienceList'
 import { ProjectList } from './ProjectList'
 
@@ -23,6 +24,31 @@ export function TerminalLine({
 	onToggleProject,
 }: TerminalLineProps) {
 	switch (line.kind) {
+		case 'profile':
+			return (
+				<div className="terminal-profile">
+					<AsciiPortrait name={portfolio.name} />
+					<div className="terminal-profile-info">
+						<div className="flex min-w-0 gap-1.5">
+							<span className="text-terminal-green">$</span>
+							<CommandText command="whoami" />
+						</div>
+						<div className="break-words text-terminal-text-bright">
+							{portfolio.name} · {portfolio.role}
+						</div>
+						<div className="break-words text-terminal-text">
+							{portfolio.blurb}
+						</div>
+						<div className="mt-2 flex min-w-0 gap-1.5">
+							<span className="text-terminal-green">$</span>
+							<CommandText command="cat location.txt" />
+						</div>
+						<div className="break-words text-terminal-text">
+							{portfolio.location}
+						</div>
+					</div>
+				</div>
+			)
 		case 'spacer':
 			return <div className="h-2" />
 		case 'system':

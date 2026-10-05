@@ -60,6 +60,7 @@ export type TerminalLineKind =
 	| 'list'
 	| 'experience-list'
 	| 'socials'
+	| 'profile'
 
 export type TerminalLineBase = {
 	id: string
@@ -96,7 +97,12 @@ export type TerminalSocialsLine = TerminalLineBase & {
 	links: ReadonlyArray<PortfolioHighlight>
 }
 
+export type TerminalProfileLine = TerminalLineBase & {
+	kind: 'profile'
+}
+
 export type TerminalLine =
+	| TerminalProfileLine
 	| TerminalTextLine
 	| TerminalPromptLine
 	| TerminalSpacerLine

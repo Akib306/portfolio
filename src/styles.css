@@ -126,6 +126,64 @@ button:focus-visible {
 	border: 2px solid var(--color-terminal-bg);
 }
 
+.terminal-command-shortcuts {
+	scrollbar-width: none;
+	overscroll-behavior-x: contain;
+}
+
+.terminal-command-shortcuts::-webkit-scrollbar {
+	display: none;
+}
+
+.terminal-command-scrollbar {
+	appearance: none;
+	width: 100%;
+	height: 28px;
+	margin: 2px 0 0;
+	background: transparent;
+	cursor: ew-resize;
+	accent-color: var(--color-terminal-blue);
+}
+
+.terminal-command-scrollbar::-webkit-slider-runnable-track {
+	height: 6px;
+	border-radius: 2px;
+	background: var(--color-terminal-border);
+}
+
+.terminal-command-scrollbar::-webkit-slider-thumb {
+	appearance: none;
+	width: 48px;
+	height: 12px;
+	margin-top: -3px;
+	border: 0;
+	border-radius: 2px;
+	background: var(--color-terminal-blue);
+}
+
+.terminal-command-scrollbar::-moz-range-track {
+	height: 6px;
+	border-radius: 2px;
+	background: var(--color-terminal-border);
+}
+
+.terminal-command-scrollbar::-moz-range-thumb {
+	width: 48px;
+	height: 12px;
+	border: 0;
+	border-radius: 2px;
+	background: var(--color-terminal-blue);
+}
+
+.terminal-command-scrollbar:focus-visible {
+	outline: 2px solid var(--color-terminal-blue);
+	outline-offset: 2px;
+}
+
+.terminal-command-scrollbar:disabled {
+	visibility: hidden;
+}
+
 #terminal-command {
 	caret-color: var(--color-terminal-blue);
 }
@@ -184,5 +242,65 @@ button:focus-visible {
 	to {
 		opacity: 1;
 		transform: translateY(0);
+	}
+}
+
+.terminal-profile {
+	display: flex;
+	align-items: center;
+	gap: 28px;
+	padding-block: 12px;
+	max-width: 110ch;
+}
+
+.terminal-profile-info {
+	min-width: 0;
+	max-width: 88ch;
+}
+
+.terminal-portrait {
+	flex: 0 0 auto;
+	margin: 0;
+	color: var(--color-terminal-green);
+}
+
+.terminal-portrait-scene {
+	width: 88ch;
+	height: 54em;
+	font-size: 6.5px;
+	line-height: 1;
+	contain: layout paint;
+}
+
+.terminal-portrait-points {
+	margin: 0;
+	font: inherit;
+	white-space: pre;
+	user-select: none;
+}
+
+.terminal-portrait-toggle {
+	display: block;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+}
+
+.terminal-portrait-toggle:disabled {
+	cursor: default;
+}
+
+@media (max-width: 639px) {
+	.terminal-profile {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+
+	.terminal-portrait-scene {
+		font-size: 5.5px;
 	}
 }

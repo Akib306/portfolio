@@ -42,6 +42,46 @@ describe('TerminalPortfolio', () => {
 		expect(input).toBeTruthy()
 	})
 
+	it('renders the portrait immediately and restores a fresh rotation on clear', () => {
+		const input = renderBootedTerminal()
+		const portrait = screen.getByRole('img', {
+			name: `ASCII portrait of ${portfolio.name}`,
+		})
+		const initialFrame = portrait.querySelector('pre')!.textContent
+		expect(
+			portrait.querySelector('pre')?.textContent.split('\n'),
+		).toHaveLength(54)
+		fireEvent.click(
+			screen.getByRole('button', { name: 'Pause portrait rotation' }),
+		)
+		expect(portrait.querySelector('pre')!.textContent).toBe(initialFrame)
+		runTextCommand(input, 'clear')
+		const restored = screen.getByRole('img', {
+			name: `ASCII portrait of ${portfolio.name}`,
+		})
+		expect(restored).not.toBe(portrait)
+		expect(restored.closest('.terminal-boot-line')).toBeTruthy()
+		expect(restored.querySelector('pre')!.textContent).toBe(initialFrame)
+		expect(
+			screen.getByRole('button', { name: 'Pause portrait rotation' }),
+		).toBeTruthy()
+	})
+
+	it('pauses portrait rotation when the page is hidden', () => {
+		renderBootedTerminal()
+		const portrait = screen.getByRole('img', {
+			name: `ASCII portrait of ${portfolio.name}`,
+		})
+		const visibility = vi.spyOn(document, 'hidden', 'get')
+		visibility.mockReturnValue(true)
+		fireEvent(document, new Event('visibilitychange'))
+		expect(portrait.getAttribute('data-page-visible')).toBe('false')
+		visibility.mockReturnValue(false)
+		fireEvent(document, new Event('visibilitychange'))
+		expect(portrait.getAttribute('data-page-visible')).toBe('true')
+		visibility.mockRestore()
+	})
+
 	it('runs commands from the input and clears the prompt value', () => {
 		const input = renderBootedTerminal()
 

@@ -92,10 +92,6 @@ export const portfolio = {
 			],
 			links: [
 				{
-					label: 'Visit CampusFind',
-					href: 'https://campus-find-three.vercel.app/',
-				},
-				{
 					label: 'Source on GitHub',
 					href: 'https://github.com/Akib306/Campus-Find',
 				},

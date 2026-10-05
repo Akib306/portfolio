@@ -32,9 +32,56 @@ body {
 }
 
 .terminal-frame {
+	--terminal-type-body: 1rem;
+	--terminal-type-title: 1.125rem;
+	--terminal-type-control: 0.875rem;
+	--terminal-type-meta: 0.75rem;
+	--terminal-prose-measure: 70ch;
 	font-family:
 		'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas,
 		'Liberation Mono', monospace;
+	font-size: var(--terminal-type-body);
+	line-height: 1.65;
+	letter-spacing: 0.005em;
+	font-variant-numeric: tabular-nums;
+	font-variant-ligatures: none;
+}
+
+.terminal-title {
+	font-size: var(--terminal-type-title);
+	font-weight: 600;
+	line-height: 1.4;
+	text-wrap: balance;
+	overflow-wrap: anywhere;
+}
+
+.terminal-meta {
+	font-size: var(--terminal-type-meta);
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.terminal-system,
+.terminal-section-label {
+	font-size: var(--terminal-type-control);
+	line-height: 1.5;
+}
+
+.terminal-section-label,
+.terminal-file-name {
+	font-weight: 500;
+}
+
+.terminal-prose {
+	max-width: var(--terminal-prose-measure);
+	font-size: var(--terminal-type-body);
+	line-height: 1.65;
+	text-wrap: pretty;
+	overflow-wrap: anywhere;
+}
+
+.terminal-file-name {
+	overflow-wrap: anywhere;
 }
 
 .terminal-link {
@@ -55,7 +102,9 @@ body {
 	background: var(--color-terminal-panel);
 	padding: 4px 12px;
 	font: inherit;
-	font-size: 13px;
+	font-size: var(--terminal-type-control);
+	line-height: 1.5;
+	font-weight: 500;
 	color: var(--color-terminal-text);
 }
 
@@ -255,7 +304,7 @@ button:focus-visible {
 
 .terminal-profile-info {
 	min-width: 0;
-	max-width: 88ch;
+	max-width: var(--terminal-prose-measure);
 }
 
 .terminal-portrait {

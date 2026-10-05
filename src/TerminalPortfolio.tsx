@@ -253,13 +253,13 @@ export function TerminalPortfolio() {
 
 	return (
 		<main
-			className="terminal-frame relative flex h-dvh min-h-[240px] flex-col overflow-hidden bg-terminal-bg font-mono text-sm leading-relaxed text-terminal-text"
+			className="terminal-frame relative flex h-dvh min-h-[240px] flex-col overflow-hidden bg-terminal-bg text-terminal-text"
 			aria-label="Interactive terminal portfolio"
 		>
 			<div className="terminal-crt-scan" aria-hidden="true" />
 			<div className="terminal-crt-vignette" aria-hidden="true" />
 
-			<div className="relative z-[3] flex flex-wrap items-center gap-2 border-b border-terminal-border-strong bg-terminal-panel px-3.5 py-2.5 text-[11px] text-terminal-muted">
+			<div className="terminal-meta relative z-[3] flex flex-wrap items-center gap-2 border-b border-terminal-border-strong bg-terminal-panel px-3.5 py-2.5 text-terminal-muted">
 				<span
 					className="h-[11px] w-[11px] rounded-full bg-terminal-red"
 					aria-hidden="true"
@@ -419,7 +419,7 @@ export function TerminalPortfolio() {
 
 			<div
 				id="terminal-keyboard-help"
-				className="relative z-[3] flex flex-wrap gap-3 border-t border-terminal-border px-3 py-2 text-[11px] text-terminal-muted sm:px-4"
+				className="terminal-meta relative z-[3] flex flex-wrap gap-3 border-t border-terminal-border px-3 py-2 text-terminal-muted sm:px-4"
 			>
 				<span className="hidden sm:inline">
 					Tab navigate · Enter run · Alt+↑↓ select · Alt+→ expand

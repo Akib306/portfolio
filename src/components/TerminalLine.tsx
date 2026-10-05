@@ -33,10 +33,10 @@ export function TerminalLine({
 							<span className="text-terminal-green">$</span>
 							<CommandText command="whoami" />
 						</div>
-						<div className="break-words text-terminal-text-bright">
+						<div className="terminal-title mt-1 mb-2 text-terminal-text-bright">
 							{portfolio.name} · {portfolio.role}
 						</div>
-						<div className="break-words text-terminal-text">
+						<div className="terminal-prose text-terminal-text">
 							{portfolio.blurb}
 						</div>
 						<div className="mt-2 flex min-w-0 gap-1.5">
@@ -53,7 +53,7 @@ export function TerminalLine({
 			return <div className="h-2" />
 		case 'system':
 			return (
-				<div className="break-words text-terminal-muted">
+				<div className="terminal-system break-words text-terminal-muted">
 					{line.text}
 				</div>
 			)
@@ -66,7 +66,7 @@ export function TerminalLine({
 			)
 		case 'output':
 			return (
-				<div className="max-w-[120ch] break-words text-terminal-text">
+				<div className="terminal-prose text-terminal-text">
 					{line.text}
 				</div>
 			)
@@ -76,7 +76,7 @@ export function TerminalLine({
 			)
 		case 'socials':
 			return (
-				<ul aria-label="Social profiles" className="max-w-[120ch]">
+				<ul aria-label="Social profiles" className="terminal-prose">
 					{line.links.map((link) => (
 						<li
 							key={link.href}

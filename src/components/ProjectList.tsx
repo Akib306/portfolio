@@ -63,16 +63,16 @@ export function ProjectList({
 							>
 								›
 							</span>
-							<span className="break-all text-terminal-yellow">
+							<span className="terminal-file-name text-terminal-yellow">
 								{project.id}
 							</span>
-							<span className="text-[11px] text-terminal-muted">
+							<span className="terminal-meta text-terminal-muted">
 								{open ? '[ close ]' : '[ open ]'}
 							</span>
-							<span className="col-span-2 col-start-2 text-terminal-text-bright">
+							<span className="terminal-prose col-span-2 col-start-2 text-terminal-text-bright">
 								{project.desc}
 							</span>
-							<span className="col-span-2 col-start-2 text-xs text-terminal-muted">
+							<span className="terminal-meta col-span-2 col-start-2 text-terminal-muted">
 								{project.year} · {project.status}
 							</span>
 						</button>

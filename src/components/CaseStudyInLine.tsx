@@ -7,18 +7,18 @@ type CaseStudyInLineProps = {
 export function CaseStudyInLine({ project }: CaseStudyInLineProps) {
 	return (
 		<div className="terminal-case ml-0 mt-1 mb-2 break-words border border-terminal-border px-4 py-3 sm:ml-7">
-			<h2 className="text-base font-medium text-terminal-text-bright">
+			<h2 className="terminal-title text-terminal-text-bright">
 				{project.tagline}
 			</h2>
 
-			<div className="mt-3 grid gap-x-3 gap-y-1 border-b border-terminal-border pb-3 text-[11px] text-terminal-text sm:grid-cols-4">
+			<div className="terminal-meta mt-3 grid gap-x-3 gap-y-1 border-b border-terminal-border pb-3 text-terminal-text sm:grid-cols-4">
 				<Meta label="role" value={project.role} />
 				<Meta label="year" value={project.year} />
 				<Meta label="platform" value={project.platform} />
 				<Meta label="status" value={project.status} />
 			</div>
 			{project.links?.length ? (
-				<div className="mt-3 flex flex-wrap gap-2 text-xs">
+				<div className="terminal-meta mt-3 flex flex-wrap gap-2">
 					{project.links.map((link) => (
 						<a
 							key={link.href}
@@ -37,15 +37,17 @@ export function CaseStudyInLine({ project }: CaseStudyInLineProps) {
 			<CaseSection title="// the problem">{project.problem}</CaseSection>
 			<CaseSection title="// the insight">{project.insight}</CaseSection>
 
-			<div className="mt-4 mb-1 text-[11px] tracking-[0.04em] text-terminal-purple">
+			<div className="terminal-section-label mt-5 mb-2 text-terminal-purple">
 				// project highlights
 			</div>
 			{project.decisions.map((decision) => (
 				<p
 					key={decision.title}
-					className="my-1 max-w-[120ch] text-sm leading-relaxed text-terminal-text-soft"
+					className="terminal-prose my-3 text-terminal-text-soft"
 				>
-					<b className="text-terminal-purple">{decision.title}.</b>{' '}
+					<b className="font-semibold text-terminal-purple">
+						{decision.title}.
+					</b>{' '}
 					{decision.detail}
 				</p>
 			))}
@@ -56,9 +58,7 @@ export function CaseStudyInLine({ project }: CaseStudyInLineProps) {
 function Meta({ label, value }: { label: string; value: string }) {
 	return (
 		<div>
-			<span className="mb-0.5 block tracking-[0.04em] text-terminal-muted">
-				{label}
-			</span>
+			<span className="mb-0.5 block text-terminal-muted">{label}</span>
 			<span>{value}</span>
 		</div>
 	)
@@ -73,10 +73,10 @@ function CaseSection({
 }) {
 	return (
 		<section>
-			<div className="mt-4 mb-1 text-[11px] tracking-[0.04em] text-terminal-purple">
+			<div className="terminal-section-label mt-5 mb-2 text-terminal-purple">
 				{title}
 			</div>
-			<p className="my-1 max-w-[120ch] text-sm leading-relaxed text-terminal-text-soft">
+			<p className="terminal-prose my-1 text-terminal-text-soft">
 				{children}
 			</p>
 		</section>

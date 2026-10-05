@@ -47,16 +47,16 @@ export function ExperienceList({
 							>
 								›
 							</span>
-							<span className="break-all text-terminal-yellow">
+							<span className="terminal-file-name text-terminal-yellow">
 								{experience.id}
 							</span>
-							<span className="text-[11px] text-terminal-muted">
+							<span className="terminal-meta text-terminal-muted">
 								{open ? '[ close ]' : '[ open ]'}
 							</span>
-							<span className="col-span-2 col-start-2 text-terminal-text-bright">
+							<span className="terminal-prose col-span-2 col-start-2 text-terminal-text-bright">
 								{experience.role} · {experience.organization}
 							</span>
-							<span className="col-span-2 col-start-2 text-xs text-terminal-muted">
+							<span className="terminal-meta col-span-2 col-start-2 text-terminal-muted">
 								{experience.period} · {experience.status}
 							</span>
 						</button>
@@ -67,25 +67,25 @@ export function ExperienceList({
 						>
 							{open ? (
 								<div className="terminal-case mb-2 ml-0 mt-1 border border-terminal-border px-4 py-3 sm:ml-7">
-									<h2 className="text-base font-medium text-terminal-text-bright">
+									<h2 className="terminal-title text-terminal-text-bright">
 										{experience.role}
 									</h2>
-									<p className="mt-1 text-xs text-terminal-muted">
+									<p className="terminal-meta mt-1 text-terminal-muted">
 										{experience.organization} ·{' '}
 										{experience.period}
 									</p>
-									<p className="mt-4 max-w-[120ch] text-sm leading-relaxed text-terminal-text-soft">
+									<p className="terminal-prose mt-4 text-terminal-text-soft">
 										{experience.summary}
 									</p>
 									{experience.highlights.length ? (
-										<ul className="mt-4 max-w-[120ch] space-y-3">
+										<ul className="terminal-prose mt-4 space-y-3">
 											{experience.highlights.map(
 												(highlight) => (
 													<li
 														key={highlight.title}
-														className="text-sm leading-relaxed text-terminal-text-soft"
+														className="text-terminal-text-soft"
 													>
-														<strong className="font-medium text-terminal-purple">
+														<strong className="font-semibold text-terminal-purple">
 															{highlight.title}.
 														</strong>{' '}
 														{highlight.detail}
@@ -102,7 +102,7 @@ export function ExperienceList({
 													href={link.href}
 													target="_blank"
 													rel="noreferrer"
-													className="terminal-link text-xs"
+													className="terminal-link terminal-meta"
 												>
 													{link.label}
 													<span className="sr-only">

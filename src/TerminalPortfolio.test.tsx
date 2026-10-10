@@ -46,6 +46,11 @@ describe('TerminalPortfolio', () => {
 		expect(screen.getByText(portfolio.location)).toBeTruthy()
 		expect(screen.getByText(portfolio.experience[0].id)).toBeTruthy()
 		expect(screen.queryByText(firstProject.id)).toBeNull()
+		expect(screen.queryByText('Project overview')).toBeNull()
+		for (const project of portfolio.projects) {
+			expect(screen.queryByText(project.tagline)).toBeNull()
+			expect(screen.queryByText(project.desc)).toBeNull()
+		}
 		expect(input).toBeTruthy()
 	})
 

@@ -1,6 +1,7 @@
 import { portfolio } from './portfolio'
 
-export const siteUrl = `https://${portfolio.domain}/`
+// Match the production redirect: motasin.dev resolves to www.motasin.dev.
+export const siteUrl = `https://www.${portfolio.domain}/`
 export const pageTitle = `${portfolio.name} | ${portfolio.role} in Saskatoon`
 export const pageDescription =
 	'Motasin Akib is a software developer in Saskatoon and a USask Computer Science student. Explore full-stack, AI, robotics, and game development projects.'
@@ -23,12 +24,6 @@ export const structuredData = {
 			description: pageDescription,
 			isPartOf: { '@id': `${siteUrl}#website` },
 			mainEntity: { '@id': `${siteUrl}#person` },
-			hasPart: portfolio.projects.map((project) => ({
-				'@type': 'CreativeWork',
-				name: project.tagline,
-				description: project.desc,
-				url: project.links[0].href,
-			})),
 		},
 		{
 			'@type': 'Person',

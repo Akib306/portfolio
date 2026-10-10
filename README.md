@@ -149,10 +149,10 @@ The name-and-profile navigation bar has been removed. The socials shortcut runs 
 
 ## Search And Link Previews
 
-The homepage serves its title, description, canonical URL, Open Graph/Twitter preview metadata, and JSON-LD profile/website data in the initial server-rendered HTML. `src/data/seo.ts` derives identity and profile links from the portfolio content. The native **Project overview** disclosure also includes project summaries, technologies, and source/demo links in that HTML, so visitors and crawlers can read them without running terminal commands or JavaScript.
+The homepage serves its title, description, canonical URL, Open Graph/Twitter preview metadata, and JSON-LD profile/website data in the initial server-rendered HTML. `src/data/seo.ts` derives identity and profile links from the portfolio content. The initial screen contains the introduction and experiences; projects appear only after running `ls projects`, clicking the projects shortcut, or using a project `cat` command.
 
-`public/sitemap.xml` lists the canonical homepage at `https://motasin.dev/`; `public/robots.txt` advertises the sitemap and allows crawling. Keep these URLs and `portfolio.domain` aligned if the production domain changes.
+`public/sitemap.xml` lists the canonical homepage at `https://www.motasin.dev/`, matching the production redirect from `motasin.dev`; `public/robots.txt` advertises the sitemap and allows crawling. Keep these URLs and `src/data/seo.ts` aligned if the production domain changes.
 
-All favicon and app icon files use the terminal symbol in `public/favicon.svg`, including the legacy `/favicon.ico` fallback, `/favicon.png`, the Apple touch icon, and the manifest PNGs. `public/social-card.png` is the share preview. Replace the corresponding assets together when changing the branding.
+All favicon and app icon files use the terminal symbol in `public/favicon.svg`, including the legacy `/favicon.ico` fallback, `/favicon.png`, the Apple touch icon, and the manifest PNGs. The homepage declares the 96×96 `/favicon.png` as its single `rel="icon"` image. `public/social-card.png` is the share preview. Replace the corresponding assets together when changing the branding.
 
-After deploying, verify the domain in Google Search Console, submit `https://motasin.dev/sitemap.xml`, and request indexing of the homepage. Rankings and the timing of Google's favicon refresh depend on Google; these changes do not guarantee a particular search position.
+After deploying, verify the domain in Google Search Console, submit `https://www.motasin.dev/sitemap.xml`, and request indexing of `https://www.motasin.dev/`. Rankings and the timing of Google's favicon refresh depend on Google; these changes do not guarantee a particular search position.

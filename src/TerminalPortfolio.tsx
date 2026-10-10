@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { TerminalLine } from '#/components/TerminalLine'
-import { ProjectOverview } from '#/components/ProjectOverview'
 import { portfolio } from '#/data/portfolio'
 import type { Project, TerminalLine as TerminalLineModel } from '#/types'
 
@@ -298,7 +297,6 @@ export function TerminalPortfolio() {
 				}}
 			>
 				{renderedLines}
-				<ProjectOverview portfolio={portfolio} />
 			</div>
 			<div className="relative z-[3] shrink-0 border-t border-terminal-border bg-terminal-bg px-3 pb-3 sm:px-[22px]">
 				<form

@@ -12,20 +12,29 @@ export const Route = createRootRoute({
 				content: 'width=device-width, initial-scale=1',
 			},
 			{
-				title: 'Motasin Akib | Software Developer',
-			},
-			{
-				name: 'description',
-				content:
-					'Motasin Akib — Computer Science at the University of Saskatchewan. Explore full-stack applications, AI interfaces, games, and current experience.',
-			},
-			{
 				name: 'theme-color',
 				content: '#1a1d23',
 			},
 		],
 		links: [
+			{
+				rel: 'icon',
+				type: 'image/x-icon',
+				href: '/favicon.ico',
+				sizes: '48x48',
+			},
+			{
+				rel: 'icon',
+				type: 'image/png',
+				href: '/favicon.png',
+				sizes: '96x96',
+			},
 			{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+			{
+				rel: 'apple-touch-icon',
+				href: '/apple-touch-icon.png',
+				sizes: '180x180',
+			},
 			{ rel: 'manifest', href: '/manifest.json' },
 			{
 				rel: 'preconnect',

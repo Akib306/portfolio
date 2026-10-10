@@ -119,7 +119,8 @@ body {
 }
 
 a:focus-visible,
-button:focus-visible {
+button:focus-visible,
+summary:focus-visible {
 	outline: 2px solid var(--color-terminal-blue);
 	outline-offset: 2px;
 }

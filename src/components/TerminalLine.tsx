@@ -33,9 +33,9 @@ export function TerminalLine({
 							<span className="text-terminal-green">$</span>
 							<CommandText command="whoami" />
 						</div>
-						<div className="terminal-title mt-1 mb-2 text-terminal-text-bright">
+						<h1 className="terminal-title mt-1 mb-2 text-terminal-text-bright">
 							{portfolio.name} · {portfolio.role}
-						</div>
+						</h1>
 						<div className="terminal-prose text-terminal-text">
 							{portfolio.blurb}
 						</div>

@@ -64,7 +64,7 @@ export function runPortfolioCommand(
 	if (normalized === 'clear') return { lines: [], shouldClear: true }
 	if (normalized === 'help')
 		return output(
-			'commands · whoami · ls · ls projects · ls experiences · socials · clear',
+			'commands · whoami · ls · ls projects · ls experiences · clear',
 			'files · cat projects/<id> · cat experiences/<id> · cat location.txt · cat socials.txt',
 			'tip · Enter runs a command; Tab moves between controls; open any row to read details',
 			'paths · projects and experiences are directories in ~; use relative paths such as ls projects',

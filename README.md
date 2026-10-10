@@ -145,4 +145,14 @@ See `PORTFOLIO_AUDIT.md` for findings, fixes, content sources, and verification 
 
 The command input supports native form submission. Tab moves between controls; Alt+Up/Down selects a project and Alt+Right expands it. The command bar stays visible, and shortcuts preserve the text draft. `clear` resets the introduction and experiences with the original fade-in behavior. Directories are relative to `~`: use `ls projects`, `ls experiences`, and `cat experiences/<id>` to read details. The input uses its native caret and Enter submission. Experiences appear by default; projects are available through `ls projects` or the projects shortcut. On mobile, command shortcuts scroll horizontally.
 
-The name-and-profile navigation bar has been removed. `socials` prints LinkedIn and GitHub links; older contact commands resolve to the same social links. `focus.txt` is removed, and `whoami` describes the development focus. Terminal prose uses a maximum width of 120 characters and wraps to fit the viewport.
+The name-and-profile navigation bar has been removed. The socials shortcut runs `cat socials.txt` to print LinkedIn and GitHub links; `socials` and older contact commands remain aliases. `focus.txt` is removed, and `whoami` describes the development focus. Terminal prose uses a maximum width of 70 characters and wraps to fit the viewport.
+
+## Search And Link Previews
+
+The homepage serves its title, description, canonical URL, Open Graph/Twitter preview metadata, and JSON-LD profile/website data in the initial server-rendered HTML. `src/data/seo.ts` derives identity and profile links from the portfolio content. The native **Project overview** disclosure also includes project summaries, technologies, and source/demo links in that HTML, so visitors and crawlers can read them without running terminal commands or JavaScript.
+
+`public/sitemap.xml` lists the canonical homepage at `https://motasin.dev/`; `public/robots.txt` advertises the sitemap and allows crawling. Keep these URLs and `portfolio.domain` aligned if the production domain changes.
+
+All favicon and app icon files use the terminal symbol in `public/favicon.svg`, including the legacy `/favicon.ico` fallback, `/favicon.png`, the Apple touch icon, and the manifest PNGs. `public/social-card.png` is the share preview. Replace the corresponding assets together when changing the branding.
+
+After deploying, verify the domain in Google Search Console, submit `https://motasin.dev/sitemap.xml`, and request indexing of the homepage. Rankings and the timing of Google's favicon refresh depend on Google; these changes do not guarantee a particular search position.

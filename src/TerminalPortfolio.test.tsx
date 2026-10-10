@@ -1,6 +1,13 @@
 // @vitest-environment happy-dom
 
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import {
+	act,
+	cleanup,
+	fireEvent,
+	render,
+	screen,
+	within,
+} from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { TerminalPortfolio } from './TerminalPortfolio'
@@ -89,7 +96,7 @@ describe('TerminalPortfolio', () => {
 
 		expect(
 			screen.getByText(
-				'commands · whoami · ls · ls projects · ls experiences · socials · clear',
+				'commands · whoami · ls · ls projects · ls experiences · clear',
 			),
 		).toBeTruthy()
 		expect(
@@ -109,7 +116,11 @@ describe('TerminalPortfolio', () => {
 		flushTimers()
 
 		expect(getProjectCaseStudy(firstProject.id)).toBeTruthy()
-		expect(screen.getByText(firstProject.tagline)).toBeTruthy()
+		expect(
+			within(getProjectCaseStudy(firstProject.id)).getByText(
+				firstProject.tagline,
+			),
+		).toBeTruthy()
 		expect(
 			getCollapseButton(firstProject).getAttribute('aria-expanded'),
 		).toBe('true')
@@ -374,6 +385,15 @@ describe('TerminalPortfolio', () => {
 					.getAttribute('href'),
 			).toBe(link.href)
 		}
+		fireEvent.click(
+			screen.getByRole('button', { name: 'Run cat socials.txt' }),
+		)
+		expect(screen.getByRole('status', { name: '' }).textContent).toBe(
+			'cat socials.txt completed. Read the terminal output.',
+		)
+		expect(
+			screen.getAllByRole('list', { name: 'Social profiles' }),
+		).toHaveLength(2)
 		fireEvent.click(getExpandButton(firstProject))
 		expect(
 			screen.getByRole('link', {

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { TerminalLine } from '#/components/TerminalLine'
+import { ProjectOverview } from '#/components/ProjectOverview'
 import { portfolio } from '#/data/portfolio'
 import type { Project, TerminalLine as TerminalLineModel } from '#/types'
 
@@ -11,7 +12,7 @@ const COMMAND_CHIPS = [
 	{ label: 'projects', command: 'ls projects' },
 	{ label: 'whoami', command: 'whoami' },
 	{ label: 'location', command: 'cat location.txt' },
-	{ label: 'socials', command: 'socials' },
+	{ label: 'socials', command: 'cat socials.txt' },
 	{ label: 'help', command: 'help' },
 	{ label: 'clear', command: 'clear' },
 ] as const
@@ -280,8 +281,6 @@ export function TerminalPortfolio() {
 					~
 				</span>
 			</div>
-			<h1 className="sr-only">{portfolio.name}</h1>
-
 			<div
 				ref={scrollRef}
 				className="terminal-scroll relative z-[3] min-h-0 flex-1 overflow-auto overflow-x-hidden px-3 py-4 sm:px-[22px] sm:py-[18px]"
@@ -299,6 +298,7 @@ export function TerminalPortfolio() {
 				}}
 			>
 				{renderedLines}
+				<ProjectOverview portfolio={portfolio} />
 			</div>
 			<div className="relative z-[3] shrink-0 border-t border-terminal-border bg-terminal-bg px-3 pb-3 sm:px-[22px]">
 				<form
